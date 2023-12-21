@@ -72,7 +72,7 @@
     "tailwindcss-opentype": "^1.1.0",
     "typescript": "~5.3.3",
     "unplugin-vue-components": "^0.26.0",
-    "unplugin-vue-macros": "^2.7.3",
+    "unplugin-vue-macros": "^2.7.5",
     "vite": "^5.0.10",
     "vite-plugin-node-polyfills": "^0.17.0",
     "vite-plugin-pwa": "^0.17.4",
