@@ -21,7 +21,7 @@
     "@intlify/unplugin-vue-i18n": "^1.6.0",
     "@tabler/icons": "^2.44.0",
     "@vee-validate/i18n": "^4.12.2",
-    "@vee-validate/rules": "^4.12.2",
+    "@vee-validate/rules": "^4.12.3",
     "@vee-validate/zod": "^4.12.2",
     "@vueuse/core": "^10.7.0",
     "@vueuse/integrations": "^10.7.0",

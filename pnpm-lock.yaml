@@ -27,8 +27,8 @@ dependencies:
     specifier: ^4.12.2
     version: 4.12.2
   '@vee-validate/rules':
-    specifier: ^4.12.2
-    version: 4.12.2(vue@3.3.11)
+    specifier: ^4.12.3
+    version: 4.12.3(vue@3.3.11)
   '@vee-validate/zod':
     specifier: ^4.12.2
     version: 4.12.2(vue@3.3.11)
@@ -2379,10 +2379,10 @@ packages:
     resolution: {integrity: sha512-wkepZ8GNYdPMUiTYYYli6bseV9XwOK9cKkQPm9Bdj/ZMUq0cfbTZhvI+/5n8bWwF46IDmlTy3ybxLIE5C46Msw==}
     dev: false
 
-  /@vee-validate/rules@4.12.2(vue@3.3.11):
-    resolution: {integrity: sha512-eWgXmwazMFXzwkdUzb5OI/qlzYj7NE9lbLS4WIcPSWmfStyGhePeEXpsuOcx0Yl8OKvCP4hB0eEP4JXYZm+C9w==}
+  /@vee-validate/rules@4.12.3(vue@3.3.11):
+    resolution: {integrity: sha512-kAcDlnUB3Fgg02oPNJmLkIK8fHmiU5bNZaYTX9agOKll6ricVGVrsaDT8rRP9Kna13jV3jAHs6yRtGcwgyPcyQ==}
     dependencies:
-      vee-validate: 4.12.2(vue@3.3.11)
+      vee-validate: 4.12.3(vue@3.3.11)
     transitivePeerDependencies:
       - vue
     dev: false
@@ -5732,7 +5732,7 @@ packages:
       '@types/normalize-package-data': 2.4.3
       normalize-package-data: 6.0.0
       parse-json: 7.1.0
-      type-fest: 4.6.0
+      type-fest: 4.8.3
     dev: true
 
   /readable-stream@3.6.2:
@@ -6408,15 +6408,9 @@ packages:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
 
-  /type-fest@4.6.0:
-    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
-    engines: {node: '>=16'}
-    dev: true
-
   /type-fest@4.8.3:
     resolution: {integrity: sha512-//BaTm14Q/gHBn09xlnKNqfI8t6bmdzx2DXYfPBNofN0WUybCEUDcbCWcTa0oF09lzLjZgPphXAsvRiMK0V6Bw==}
     engines: {node: '>=16'}
-    dev: false
 
   /typed-array-buffer@1.0.0:
     resolution: {integrity: sha512-Y8KTSIglk9OZEr8zywiIHG/kmQ7KWyjseXs1CbSo8vC42w7hg2HgYTxSWwP0+is7bWDc1H+Fo026CpHFwm8tkw==}
@@ -6720,6 +6714,16 @@ packages:
     resolution: {integrity: sha512-SF5AOHbyW8vy09FgMRVHxCtK/3D5Jsk0VyvMf/HZhwPgpjGCCBW6ZWDW11/HC6pRbMOjTcg3YueBI6hb3oveYg==}
     peerDependencies:
       vue: ^3.3.8
+    dependencies:
+      '@vue/devtools-api': 6.5.1
+      type-fest: 4.8.3
+      vue: 3.3.11(typescript@5.3.3)
+    dev: false
+
+  /vee-validate@4.12.3(vue@3.3.11):
+    resolution: {integrity: sha512-+ux21pFm2beGK21Q8LFDJdYqCu/7yd0HDIGolNvr7GjjlBTrK0JXm2y+h01jssyIlT1/+sSTNwAEqlSs0Nz0QA==}
+    peerDependencies:
+      vue: ^3.3.11
     dependencies:
       '@vue/devtools-api': 6.5.1
       type-fest: 4.8.3
