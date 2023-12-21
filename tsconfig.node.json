@@ -1,0 +1,27 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "module": "es2022",
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "node",
+      "unplugin-vue-macros/macros-global",
+      "@vueuse/core",
+      "@vueuse/integrations",
+      "@atproto/api",
+      "'lodash",
+      "@intlify/unplugin-vue-i18n/messages"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+select: Do you want banana?
+fruits:
+  banana: no bananas | {n} banana | {n} bananas
+auth:
+  app: SkyTrails – Anmeldung
+  signin: im BlueSky-Netzwerk anmelden
+validation:
+  required: $field ist ein Pflichtfeld
+forms:
+  auth:
+    buttons:
+      login: In BlueSky anmelden
+    fields:
+      service: Service
+      password: App-Kennwort
+      identifier: E-Mail-Adresse

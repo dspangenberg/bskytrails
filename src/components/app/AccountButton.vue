@@ -1,0 +1,43 @@
+<script setup lang="ts">
+import { type Profile } from '@/stores/SkySessionStore.ts'
+import { computed } from 'vue'
+
+export interface Props {
+  profile: Profile | null
+}
+
+const props = defineProps<Props>()
+const avatar = computed<string>(() => props.profile?.avatar || '')
+
+</script>
+
+<template>
+  <div class="w-fullitems-center">
+    <storm-ui-menu
+      v-if="profile"
+      origin="bottom"
+    >
+      <template #trigger>
+        <button class="block  border-4  hover:border-gray-200 border-transparent my-1 rounded-md active:bg-gray-100 mx-auto">
+          <storm-ui-avatar
+            :src="avatar"
+            :size="12"
+            :alt="profile.handle"
+          />
+        </button>
+      </template>
+      <div>
+        <storm-ui-menu-item
+          disabled
+          icon="tabler-user-circle"
+          label="Mein Profil bearbeiten"
+        />
+        <storm-ui-menu-item
+          disabled
+          icon="tabler-password"
+          label="Kennwort ändern"
+        />
+      </div>
+    </storm-ui-menu>
+  </div>
+</template>
