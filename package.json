@@ -18,7 +18,7 @@
     "@atproto/syntax": "^0.1.5",
     "@fontsource/clear-sans": "^5.0.7",
     "@headlessui/vue": "^1.7.16",
-    "@intlify/unplugin-vue-i18n": "^1.6.0",
+    "@intlify/unplugin-vue-i18n": "^2.0.0",
     "@tabler/icons": "^2.44.0",
     "@vee-validate/i18n": "^4.12.3",
     "@vee-validate/rules": "^4.12.3",
