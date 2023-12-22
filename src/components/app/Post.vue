@@ -5,9 +5,19 @@ import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 import PostEmbedExternal from './PostEmbedExternal.vue'
 import PostEmbedImages from './PostEmbedImages.vue'
 import PostFooter from './PostFooter.vue'
+import PostProfileHoverCard from './PostProfileHoverCard.vue'
 import { useRouter } from 'vue-router'
 import { useTemplateFilter } from '@/composables/useTemplateFilter.ts'
 import { useRichText } from '@/composables/useRichText.ts'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger
+} from '@/components/shadn/ui/hover-card'
+import { useElementHover } from '@vueuse/core'
+import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
+
+const sessionStore = await useSkySessionStore()
 
 const bookmarkStore = useBookmarkStore()
 type FeedPostRecord = AppBskyFeedPost.Record
@@ -15,6 +25,10 @@ type FeedPost = AppBskyFeedDefs.FeedViewPost
 type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
+type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
+
+const profileCardOpen = ref(false)
+const authorDetails = ref<AuthorDetailed | null>(null)
 
 const router = useRouter()
 const { toMd } = useTemplateFilter()
@@ -36,6 +50,13 @@ const avatarIcon = computed(() => {
   return undefined
 })
 
+const onLoadProfile = async () => {
+  if (profileCardOpen.value === false) {
+    authorDetails.value = await sessionStore.getActorProfile(props.author.handle, true)
+    profileCardOpen.value = true
+  }
+}
+
 const bookmarkedCids = computed(() => bookmarkStore.bookmarkedCids)
 
 const isBookmarked = computed(() => {
@@ -48,7 +69,8 @@ const renderText = (record: FeedPostRecord) => {
   return render(record)
 }
 
-const isExpanded = ref(false)
+const myHoverableElement = ref()
+const isExpanded = useElementHover(myHoverableElement, { delayEnter: 500 })
 
 const props = defineProps<Props>()
 const isRepost = computed(() => props.reason?.$type === 'app.bsky.feed.defs#reasonRepost')
@@ -105,12 +127,24 @@ const goProfile = (handle: string) => {
       </div>
     </div>
     <div class="mt-3 ml-4">
-      <storm-ui-avatar
-        :src="author.avatar"
-        :alt="author.handle"
-        :size="12"
-        :icon="avatarIcon"
-      />
+      <HoverCard @updated="onLoadProfile(event)">
+        <HoverCardTrigger>
+          <storm-ui-avatar
+            class="cursor-pointer"
+            :src="author.avatar"
+            :alt="author.handle"
+            :size="12"
+            :icon="avatarIcon"
+            @click="goProfile(author.handle)"
+          />
+        </HoverCardTrigger>
+        <HoverCardContent class="w-full max-w-sm">
+          <PostProfileHoverCard
+            :profile="author"
+            :complete-profile="authorDetails"
+          />
+        </HoverCardContent>
+      </HoverCard>
     </div>
     <div class="col-span-11 pl-2">
       <div class="min-w-0 flex-1 flex">
@@ -160,9 +194,8 @@ const goProfile = (handle: string) => {
         <span class="font-normal text-stone-400 ">
           Antwort an {{ reply?.parent.author.handle }}</span>
         <span
+          ref="myHoverableElement"
           :class="!isExpanded ? 'line-clamp-2' : ''"
-          @mouseover="isExpanded = true"
-          @mouseout="isExpanded = false"
           v-html="renderText(reply?.parent.record)"
         />
       </div>

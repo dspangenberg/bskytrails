@@ -33,8 +33,6 @@ onMounted(() => {
   const appPassword = import.meta.env.VITE_APP_BSKY_APP_PASSWORD
   const service = import.meta.env.VITE_APP_BSKY_APP_SERVICE
 
-  console.log(credentials, appPassword, service)
-
   if (service) {
     form.service = service
   }

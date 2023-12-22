@@ -20,6 +20,8 @@ const onSubmit = handleSubmit(values => {
 })
 
 defineExpose({ setValues })
+
+console.log(props.nitialValues)
 </script>
 
 <template>

@@ -67,6 +67,11 @@ const router = createRouter({
           path: 'thread/:uri',
           name: 'thread',
           component: () => import('@/views/Home.vue')
+        },
+        {
+          path: 'preferences',
+          name: 'preferences',
+          component: () => import('@/views/Preferences.vue')
         }
       ]
     }

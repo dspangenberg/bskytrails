@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { AtUri, AppBskyFeedDefs } from '@atproto/api'
 import { useSkySessionStore } from './SkySessionStore.ts'
+
 import { set, unset } from 'lodash'
 
 type FeedPost = AppBskyFeedDefs.FeedViewPost
@@ -26,9 +27,10 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const isLoading = ref(false)
 
   const feed = ref()
-  const cursor = ref<string | null>(null)
-  const limit = ref<number>(20)
-  const feedType = ref<string | null>(null)
+  const lastCursor = ref<string | null>(null)
+  const limit = ref<number>(10)
+  const feedType = ref<string | undefined>(undefined)
+  const oldParam = ref<string | null>(null)
 
   type FeedParams = {
     key?: string
@@ -56,13 +58,18 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
-  const getTimelineByView = async (type: string, value?: string) => {
-    isLoading.value = true
-    agent.value = await skySessionStore.getAgent()
+  const getTimelineByView = async (type: string, value?: string, cursor?: string) => {
+    feedType.value = type
 
-    if (feedType.value !== type) {
-      cursor.value = null
+    if (cursor === undefined) {
+      isLoading.value = true
     }
+
+    if (value !== undefined && value !== null) {
+      oldParam.value = value
+    }
+
+    agent.value = await skySessionStore.getAgent()
 
     const key = getKeyByType(type)
 
@@ -74,8 +81,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       params[key] = value
     }
 
-    if (cursor.value) {
-      params.cursor = cursor.value
+    if (cursor) {
+      params.cursor = cursor
     }
 
     let data: ViewTimline | null = null
@@ -98,6 +105,11 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
         break
     }
 
+    if (cursor) {
+      lastCursor.value = cursor
+      return data
+    }
+
     if (data) {
       store.$patch((state) => {
         state.viewTimeline = data
@@ -105,6 +117,23 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
 
     isLoading.value = false
+  }
+
+  const loadMore = async (cursor: string) => {
+    if (lastCursor.value !== cursor) {
+      const type = feedType.value
+      const loadedData = await getTimelineByView(feedType.value, oldParam.value || undefined, cursor)
+      if (loadedData?.feed.length) {
+        store.$patch((state) => {
+          if (state.viewTimeline) {
+            state.viewTimeline.cursor = loadedData?.cursor || null
+          }
+          for (const item of loadedData?.feed) {
+            state.viewTimeline?.feed?.push(item)
+          }
+        })
+      }
+    }
   }
 
   const getTimeline = async (params: FeedParams) => {
@@ -234,6 +263,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   return {
     feed,
     isLoading,
+    loadMore,
     viewTimeline,
     getFeedDetails,
     getTimelineByView,

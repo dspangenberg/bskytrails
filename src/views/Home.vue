@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { useRoute, type RouteLocationNormalized } from 'vue-router'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
-import { usePermission } from '@vueuse/core'
+import { useInfiniteScroll } from '@vueuse/core'
 
-const notifications = usePermission('notifications')
-console.log(notifications)
-
+const el = ref<HTMLElement | null>(null)
 
 const bookmarkStore = useBookmarkStore()
 const timelineStore = await useSkyTimelineStore()
@@ -20,6 +17,13 @@ const skySessionStore = useSkySessionStore()
 
 const { profile } = storeToRefs(skySessionStore)
 const { viewTimeline, isLoading } = storeToRefs(timelineStore)
+
+useInfiniteScroll(
+  el,
+  async () => {
+    await timelineStore.loadMore(viewTimeline.value.cursor)
+  }
+)
 
 const createFeedUri = (route: RouteLocationNormalized) => {
   const { uri, type, name } = route.params
@@ -53,10 +57,11 @@ watch(route, async (route) => {
 
 </script>
 <template>
-  <div class="flex flex-1 h-full">
+  <div class="flex flex-1 h-full items-stretch">
     <ul
       v-if="!isLoading && viewTimeline"
-      class="divide-y px-0 mx-0 h-full flex flex-col flex-1"
+      ref="el"
+      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto"
     >
       <app-post
         v-for="(post, index) in viewTimeline.feed"

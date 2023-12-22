@@ -2,8 +2,12 @@
 import { type Profile, useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-
 import { computed } from 'vue'
+import { useSettingsStore } from '@/stores/SettingsStore.ts'
+
+const settingsStore = useSettingsStore()
+const { settings } = storeToRefs(settingsStore)
+
 const route = useRoute()
 export interface Props {
   profile: Profile | null
@@ -47,7 +51,7 @@ const feedParams = (uri: string) => {
             active-route-path="/home"
           />
           <storm-ui-nav-item
-            open
+            :open="settings?.showPinnedViews"
             label="Feeds"
             icon="message-2-heart"
             route-name="feeds"
@@ -63,11 +67,11 @@ const feedParams = (uri: string) => {
             />
           </storm-ui-nav-item>
           <storm-ui-nav-item
+            :open="settings?.showLists"
             :disabled="!profile"
             :loading="isLoadingLists"
             label="Listen"
             icon="tabler-list-details"
-            open
             route-name="profile"
             :route-params="{ handle: profile?.handle }"
             active-route-path="/list"
@@ -99,8 +103,8 @@ const feedParams = (uri: string) => {
           <storm-ui-nav-item
             label="Präferenzen"
             icon="tabler-adjustments-alt"
-            route-name="home"
-            active-route-path="/homex"
+            route-name="preferences"
+            active-route-path="/preferences"
           />
 
           <storm-ui-nav-item

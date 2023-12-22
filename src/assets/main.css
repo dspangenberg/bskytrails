@@ -78,7 +78,7 @@
 }
 
 .markdown p {
-  @apply pb-4;
+  @apply pb-2;
 }
 
 .markdown p:last-child {

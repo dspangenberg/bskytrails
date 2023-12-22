@@ -1,26 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { BskyAgent, AppBskyFeedDefs, AppBskyGraphDefs, type AtpSessionEvent, type AppBskyFeedGetFeedGenerators, type AtpSessionData } from '@atproto/api'
+import { BskyAgent, AppBskyFeedDefs, AppBskyGraphDefs, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedGetFeedGenerators, type AtpSessionData } from '@atproto/api'
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 
 type FeedGenerators = AppBskyFeedGetFeedGenerators.Response
 type ListView = AppBskyGraphDefs.ListView
 
 type Agent = any
-export interface Profile {
-  avatar?: string
-  banner?: string
-  description?: string
-  did?: string
-  displayName: string
-  followersCount?: number
-  followsCount?: number
-  handle?: string
-  indexedAt?: string
-  labels?: string[]
-  postsCount?: number
-  viewer: object
-}
+
+type Profile = AppBskyActorDefs.ProfileViewDetailed
 
 export const useSkySessionStore = defineStore('sky-session-store', () => {
   const agent = ref<Agent | null>(null)
@@ -86,7 +74,7 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     }
   }
 
-  const getActorProfile = async (did: string) => {
+  const getActorProfile = async (did: string, returnOnly = false) => {
     isLoadingProfile.value = true
     if (!agent.value) {
       getAgent()
@@ -94,7 +82,10 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     const { data, success } = await agent.value.getProfile({ actor: did })
     isLoadingProfile.value = false
     if (success) {
-      actor.value = data
+      if (!returnOnly) {
+        actor.value = data
+      }
+      return data
     }
   }
 
