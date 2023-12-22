@@ -3,13 +3,13 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { useRoute, type RouteLocationNormalized } from 'vue-router'
-import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
+
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
 import { useInfiniteScroll } from '@vueuse/core'
 
 const el = ref<HTMLElement | null>(null)
 
-const bookmarkStore = useBookmarkStore()
+
 const timelineStore = await useSkyTimelineStore()
 
 const route = useRoute()
@@ -44,7 +44,7 @@ const actorParam = computed<string>(() => {
 watch(route, async (route) => {
   switch (route.name) {
     case 'bookmarks':
-      await bookmarkStore.getBookmarkedPosts()
+      await timelineStore.getTimelineByView('bookmarks')
       break
     case 'profile':
       if (actorParam.value !== undefined) {

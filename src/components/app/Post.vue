@@ -18,7 +18,6 @@ import {
   HoverCardContent,
   HoverCardTrigger
 } from '@/components/shadn/ui/hover-card'
-import { useElementHover } from '@vueuse/core'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 
 const sessionStore = await useSkySessionStore()
@@ -155,7 +154,7 @@ const goProfile = (handle: string) => {
             @click="goProfile(author.handle)"
           />
         </HoverCardTrigger>
-        <HoverCardContent class="w-full max-w-sm">
+        <HoverCardContent class="w-full max-w-sm min-w-[24rem]">
           <PostProfileHoverCard
             :profile="author"
             :complete-profile="authorDetails"
@@ -170,7 +169,7 @@ const goProfile = (handle: string) => {
           @click="goProfile(author.handle)"
         >
           <div
-            class="text-base text-black font-medium leading-relaxed flex-1 flex "
+            class="text-base text-black font-medium leading-normal flex-1 flex "
           >
             {{ author.displayName || author.handle }}
           </div>
@@ -209,7 +208,7 @@ const goProfile = (handle: string) => {
       />
 
       <div
-        class="text-lg leading-snug text-black text-left py-2 mr-2 break-words flex-1 flex-wrap hyphens-auto markdown"
+        class="text-lg leading-snug text-black text-left py-2 mr-2  flex-1 flex-wrap break-words hyphens-auto markdown"
         @click="getThread(post?.uri)"
       >
         <span v-html="renderText(record)" />

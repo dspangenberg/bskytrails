@@ -36,6 +36,11 @@ const feedParams = (uri: string) => {
   return params
 }
 
+const activeRoute = (name: string, uri: string) => {
+  const parts = uri.replace('at://', '').split('/')
+  return '/' + name + '/' + parts.join('/')
+}
+
 </script>
 
 <template>
@@ -70,6 +75,7 @@ const feedParams = (uri: string) => {
               :label="feed.displayName"
               route-name="feeds-timeline"
               :route-params="feedParams(feed.uri)"
+              :active-route-path="activeRoute('feed', feed.uri)"
             />
           </storm-ui-nav-item>
           <storm-ui-nav-item
@@ -88,6 +94,7 @@ const feedParams = (uri: string) => {
               :label="list.name"
               route-name="list-feed"
               :route-params="feedParams(list.uri)"
+              :active-route-path="activeRoute('list', list.uri)"
             />
           </storm-ui-nav-item>
         </storm-ui-nav-group>

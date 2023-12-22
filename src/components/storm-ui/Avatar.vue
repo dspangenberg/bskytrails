@@ -8,13 +8,15 @@ export interface Props {
   iconColor?: string
   size?: number
   badgeColor?: string
+  spinner?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: 12,
   icon: undefined,
   iconColor: 'text-black',
-  badgeColor: 'bg-white'
+  badgeColor: 'bg-white',
+  spinner: false
 })
 
 const sizeClass = computed(() => {
@@ -38,6 +40,16 @@ const sizeClass = computed(() => {
       :src="src"
       :alt="alt"
     >
+    <span
+      v-if="spinner"
+      class="absolute bottom-1 right-2 h-4 w-4 rounded-full"
+    >
+
+      <storm-ui-spinner
+        :size="4"
+      />
+
+    </span>
     <span
       v-if="icon"
       class="absolute bottom-0 right-0 h-4 w-4 rounded-full ring ring-white"

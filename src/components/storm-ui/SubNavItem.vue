@@ -81,12 +81,12 @@ const isActive = computed(() => {
       custom
     >
       <li
-        :class="[disabled ? '!text-gray-300 cursor-not-allowed' : 'text-gray-600', isActive ? 'text-gray-800 font-medium' : ' hover:underline', 'focus:border-blue-400 focus:ring-1 focus:ring-blue-200 focus:outline-none cursor-pointer group flex items-center px-4 rounded-md']"
+        :class="[disabled ? '!text-gray-300 cursor-not-allowed' : 'text-gray-600', isActive ? '!text-black !font-medium' : ' hover:underline', 'focus:border-blue-400 focus:ring-1 focus:ring-blue-200 focus:outline-none cursor-pointer group flex items-center px-4 rounded-md']"
         @click="go(lroute)"
       >
         <span
           v-tooltip="translatedLabel"
-          class="truncate hover:underline text-sm font-normal"
+          class="truncate hover:underline text-sm"
         >
           {{ translatedLabel }}
         </span>

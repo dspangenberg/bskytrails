@@ -104,15 +104,13 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     }
 
     const { data, success } = await agent.value.getPosts({ uris })
-
+    const posts = []
     if (success) {
-      const posts: FeedPost[] = []
-      for (const post of data.posts) { posts.push({ post }) }
-      store.$patch((state) => {
-        state.timeline = posts
-      })
+      for (const post of data.posts) {
+        posts.push({ post })
+      }
+      return posts
     }
-    isTimeLineLoading.value = false
   }
 
   const getActorLists = async (actor: string) => {

@@ -4,6 +4,7 @@ import { AtUri, AppBskyFeedDefs } from '@atproto/api'
 import { useSkySessionStore } from './SkySessionStore.ts'
 
 import { set, unset } from 'lodash'
+import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 type PostView = AppBskyFeedDefs.PostView
@@ -18,6 +19,8 @@ export type ViewTimline = {
 
 export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const skySessionStore = useSkySessionStore()
+  const bookmarkStore = useBookmarkStore()
+
   const agent = ref<Agent | null>(null)
 
   const viewTimeline = ref<ViewTimline| null>(null)
@@ -103,6 +106,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       case 'thread':
         data = await getThreadTimeline(params)
         break
+      case 'bookmarks':
+        data = await getBookmarksFeed()
     }
 
     if (cursor) {
@@ -192,6 +197,17 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       }
     }
     return null
+  }
+
+  const getBookmarksFeed = async () => {
+    const posts = await bookmarkStore.getBookmarkedPosts()
+    console.log(posts)
+    const data: ViewTimline = {
+      view: 'feed-bookmarks',
+      cursor: '',
+      feed: posts
+    }
+    return data
   }
 
   const getThreadTimeline = async (params: FeedParams) => {
