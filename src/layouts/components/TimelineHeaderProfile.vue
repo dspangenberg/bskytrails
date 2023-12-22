@@ -13,17 +13,19 @@ export interface Props {
 }
 
 const skySessionStore = useSkySessionStore()
-const { isProfileLoading, actor } = storeToRefs(skySessionStore)
+const { isLoadingProfile, actor } = storeToRefs(skySessionStore)
 
 defineProps<Props>()
 
 const onFollow = async () => {
-  await skySessionStore.follow(actor.value.did)
+  if (actor.value?.did) {
+    await skySessionStore.follow(actor.value.did.toString())
+  }
 }
 
 watch(route, async (route) => {
   if (route.name === 'profile') {
-    await skySessionStore.getActorProfile(route.params.handle)
+    await skySessionStore.getActorProfile(route.params.handle.toString())
   }
 }, { immediate: true })
 
@@ -31,7 +33,7 @@ watch(route, async (route) => {
 
 <template>
   <div>
-    <div v-if="!isProfileLoading">
+    <div v-if="!isLoadingProfile">
       <div
         v-if="actor"
         class="flex flex-1 relative z-100 flex-col"
@@ -54,14 +56,14 @@ watch(route, async (route) => {
             <div class="text-sm text-gray-600 font-normal">
               @{{ actor.handle }}
               <span
-                v-if="actor.viewer.followedBy"
+                v-if="actor.viewer?.followedBy"
                 class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-sm font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
               >Folgt Dir</span>
             </div>
           </div>
           <div class="text-base font-medium text-center space-x-2 ">
             <storm-ui-button
-              v-if="actor.viewer.following"
+              v-if="actor.viewer?.following"
               icon="user-x"
               @click="onFollow"
             >
@@ -80,9 +82,9 @@ watch(route, async (route) => {
           </div>
         </div>
         <div class="text-base px-4">
-          {{ formatInt(actor.followersCount) }} Folgende&nbsp;&nbsp;
-          {{ formatInt(actor.followsCount) }} Folgt&nbsp;&nbsp;
-          {{ formatInt(actor.postsCount) }} Posts
+          {{ formatInt(actor?.followersCount || 0) }} Folgende&nbsp;&nbsp;
+          {{ formatInt(actor?.followsCount || 0) }} Folgt&nbsp;&nbsp;
+          {{ formatInt(actor?.postsCount || 0) }} Posts
         </div>
         <div
           v-if="actor.description"

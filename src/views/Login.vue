@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
+import { useSkySessionStore, type IKeyValueStore } from '@/stores/SkySessionStore.ts'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -19,12 +19,12 @@ const form = reactive({
   service: ''
 })
 
-const onSubmit = async (values) => {
+const onSubmit = async (values: IKeyValueStore) => {
   localStorage.setItem('credentials', JSON.stringify({
     service: values.service,
     identifier: values.identifier
   }))
-  await skySessionStore.login(values.service, values.identifier, values.password)
+  await skySessionStore.login(values.service.toString(), values.identifier.toString(), values.password.toString())
   router.push('/')
 }
 

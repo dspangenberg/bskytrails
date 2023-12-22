@@ -18,8 +18,7 @@ const selectedSegment = inject<string>('selectedSegment')
 const setSegment = inject<Function>('setSegment')
 
 const changed = () => {
-  if (!props.disabled) {
-    console.log('setSegment', props.value)
+  if (!props.disabled && props.value && setSegment instanceof Function) {
     setSegment(props.value)
   }
 }

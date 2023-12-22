@@ -15,13 +15,11 @@ const { setValues, handleSubmit } = useForm({
 })
 
 const onSubmit = handleSubmit(values => {
-  console.log(values)
   emit('success', values)
 })
 
 defineExpose({ setValues })
 
-console.log(props.nitialValues)
 </script>
 
 <template>

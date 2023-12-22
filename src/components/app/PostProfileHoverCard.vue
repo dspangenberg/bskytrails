@@ -10,7 +10,7 @@ type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
 
 export interface Props {
   profile: Author
-  completeProfile: AuthorDetailed
+  completeProfile: AuthorDetailed | null
 }
 
 defineProps<Props>()
@@ -47,6 +47,7 @@ defineProps<Props>()
       class="pt-2"
     >
       <div
+        v-if="completeProfile.description"
         class="text-base text-black leading-relaxed markdown"
         v-html="toMd(completeProfile.description)"
       />

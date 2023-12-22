@@ -1,20 +1,23 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { BskyAgent, AppBskyFeedDefs, AppBskyGraphDefs, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedGetFeedGenerators, type AtpSessionData } from '@atproto/api'
+import { BskyAgent, AppBskyGraphDefs, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedDefs, type AtpSessionData } from '@atproto/api'
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 
-type FeedGenerators = AppBskyFeedGetFeedGenerators.Response
+type FeedGenerator = AppBskyFeedDefs.GeneratorView
 type ListView = AppBskyGraphDefs.ListView
 
 type Agent = any
+export type Profile = AppBskyActorDefs.ProfileViewDetailed
 
-type Profile = AppBskyActorDefs.ProfileViewDetailed
+export type IKeyValueStore = {
+  [key: string]: string | boolean | number
+}
 
 export const useSkySessionStore = defineStore('sky-session-store', () => {
   const agent = ref<Agent | null>(null)
-  const profile = ref<Profile | null>(null)
-  const actor = ref<Profile | null>(null)
-  const pinnedFeeds = ref<FeedGenerators[] | null>(null)
+  const profile = ref<AppBskyActorDefs.ProfileViewDetailed | null>(null)
+  const actor = ref<AppBskyActorDefs.ProfileViewDetailed | null>(null)
+  const pinnedFeeds = ref<FeedGenerator[] | null>(null)
   const lists = ref<ListView[] | null>(null)
   const timeline = ref<FeedPost[] | null>(null)
   const parentPost = ref<FeedPost | null>(null)
@@ -120,6 +123,21 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     isLoadingLists.value = false
   }
 
+  const getFeedGeneratorDetails = async (feeds: FeedGenerator[]) => {
+    const { success, data } = await agent.value.app.bsky.feed.getFeedGenerators({ feeds })
+    if (success) {
+      pinnedFeeds.value = data.feeds as FeedGenerator[]
+    }
+  }
+
+  const getPreferences = async () => {
+    const data = await agent.value.getPreferences()
+    if (data.feeds?.pinned) {
+      await getFeedGeneratorDetails(data.feeds.pinned)
+      isLoadingFeeds.value = false
+    }
+  }
+
   const getMyProfile = async () => {
     if (agent.value?.session?.did) {
       isLoadingLists.value = true
@@ -132,12 +150,8 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
       }
 
       await getActorLists(agent.value.session?.did)
+      await getPreferences()
 
-      const result = await agent.value.getPreferences()
-      const returns = await agent.value.app.bsky.feed.getFeedGenerators({ feeds: result.feeds.pinned })
-      isLoadingFeeds.value = false
-
-      pinnedFeeds.value = returns.data.feeds
       isLoadingProfile.value = false
     }
   }

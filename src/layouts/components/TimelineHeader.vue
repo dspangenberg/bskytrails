@@ -3,16 +3,12 @@ import TimelineHeaderDefault from './TimelineHeaderDefault.vue'
 import TimelineHeaderBookmarks from './TimelineHeaderBookmarks.vue'
 import TimelineHeaderProfile from './TimelineHeaderProfile.vue'
 import TimelineHeaderFeedTimeline from './TimelineHeaderFeedTimeline.vue'
-
+import { type RouteRecordName } from 'vue-router'
 import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
-
-const skySessionStore = useSkySessionStore()
 
 export interface Props {
   title: string | null
-  type: string | null
+  type: RouteRecordName | null
 }
 
 const props = defineProps<Props>()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue'
-import { useSettingsStore } from '@/stores/SettingsStore.ts'
+import { useSettingsStore, type IKeyValueStore } from '@/stores/SettingsStore.ts'
 import { storeToRefs } from 'pinia'
 
 const settingsStore = useSettingsStore()
@@ -12,7 +12,7 @@ onMounted(async () => {
   await settingsStore.loadSettings()
 })
 
-const onSubmit = async (values) => {
+const onSubmit = async (values: IKeyValueStore) => {
   await settingsStore.saveSettings(values)
 }
 

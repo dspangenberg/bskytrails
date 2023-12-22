@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { type Profile } from '@/stores/SkySessionStore.ts'
+import { AppBskyActorDefs } from '@atproto/api'
 import { computed } from 'vue'
 
+type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
+
 export interface Props {
-  profile: Profile | null
+  profile: AuthorDetailed | null
 }
 
 const props = defineProps<Props>()

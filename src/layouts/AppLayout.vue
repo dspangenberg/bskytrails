@@ -43,7 +43,7 @@ onMounted(async () => {
       <main class="flex-1 bg-white w-[600px] border-l border-r flex flex-col">
         <TimelineHeader
           :title="title"
-          :type="route.name"
+          :type="route?.name || null"
         />
         <Suspense>
           <div class="flex-1 scroll-smooth  scrollbar-thin overflow-y-auto overflow-x-hidden">

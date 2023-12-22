@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
-import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
 import { computed } from 'vue'
 
-const skySessionStore = useSkySessionStore()
 const skyTimelineStore = useSkyTimelineStore()
 
 type FeedPostRecord = AppBskyFeedPost.Record
-type FeedPost = AppBskyFeedDefs.FeedViewPost
 type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost
+type FeedPost = AppBskyFeedDefs.FeedViewPost
 
 export interface Props {
   post: FeedPost
@@ -20,6 +19,8 @@ export interface Props {
   reason?: Reason
   reply?: Reply
 }
+
+const viewer = computed(() => props.post.viewer as FeedViewPost)
 
 const props = defineProps<Props>()
 
@@ -31,7 +32,7 @@ const onRepost = async () => {
   await skyTimelineStore.postToggleRepost(props.post)
 }
 
-const isRepost = computed(() => !!props.post.viewer?.repost)
+const isRepost = computed(() => !!viewer.value?.repost)
 
 const onDump = () => {
   const dump = {
@@ -51,7 +52,7 @@ const onDump = () => {
         icon-default="message-reply"
         icon-active="message-reply"
         color="text-blue-500"
-        :active="!!post.viewer?.reply"
+        :active="!!viewer.reply"
         :counter="post.replyCount"
       />
     </div>
@@ -66,7 +67,7 @@ const onDump = () => {
             icon-default="message-share"
             icon-active="message-share"
             color="text-green-500"
-            :active="!!post.viewer?.repost"
+            :active="!!viewer.repost"
             :counter="post.repostCount"
           />
         </template>
@@ -89,7 +90,7 @@ const onDump = () => {
         icon-default="heart"
         icon-active="heart-filled"
         color="text-red-500"
-        :active="!!post.viewer?.like"
+        :active="!!viewer.like"
         :counter="post.likeCount"
         @click="onLikePost"
       />

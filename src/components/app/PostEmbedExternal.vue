@@ -1,22 +1,19 @@
 <script setup lang="ts">
+import { AppBskyEmbedExternal } from '@atproto/api'
 import { computed } from 'vue'
 
-export type EmbedExternal = {
-  description: string,
-  thumb: string,
-  title: string,
-  uri: string
-}
-
 export interface Props {
-  external: EmbedExternal
+  external: AppBskyEmbedExternal.View
 }
 
 const props = defineProps<Props>()
 
-const uri = computed(() => {
-  const url = new URL(props.external.uri)
-  return url.host.replace('www.', '')
+const thumb = computed(() => props.external.thumb as string)
+const url = computed(() => props.external.uri as string)
+
+const uri = computed<string>(() => {
+  const urll = new URL(url.value)
+  return urll.host.replace('www.', '')
 })
 
 </script>
@@ -24,14 +21,14 @@ const uri = computed(() => {
 <template>
   <div class="mx-auto max-w-md overflow-hidden border rounded-md bg-white shadow-sm pb-2 my-6">
     <img
-      :src="external.thumb"
+      :src="thumb"
       class="w-full object-cover"
       alt=""
     >
     <div class="p-4">
       <p class="mb-1 text-sm text-primary-500 text-blue-800">
         <a
-          :href="external.uri"
+          :href="url"
           target="_blank"
           class="hover:underline"
         > {{ uri }}</a>

@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
 import { watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, type RouteLocationNormalized } from 'vue-router'
 
 const timelineStore = await useSkyTimelineStore()
 const { feed } = storeToRefs(timelineStore)

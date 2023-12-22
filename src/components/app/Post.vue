@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
+// AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia
+import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import { computed, ref } from 'vue'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 import PostEmbedExternal from './PostEmbedExternal.vue'
@@ -7,7 +8,6 @@ import PostEmbedImages from './PostEmbedImages.vue'
 import PostFooter from './PostFooter.vue'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
 import { useRouter } from 'vue-router'
-import { useTemplateFilter } from '@/composables/useTemplateFilter.ts'
 import { useRichText } from '@/composables/useRichText.ts'
 import {
   HoverCard,
@@ -25,13 +25,12 @@ type FeedPost = AppBskyFeedDefs.FeedViewPost
 type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
-type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
+type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed | null
 
 const profileCardOpen = ref(false)
 const authorDetails = ref<AuthorDetailed | null>(null)
 
 const router = useRouter()
-const { toMd } = useTemplateFilter()
 
 export interface Props {
   post: FeedPost
@@ -50,6 +49,13 @@ const avatarIcon = computed(() => {
   return undefined
 })
 
+const embed = computed(() => props.post.embed)
+
+const embedExternal = computed<AppBskyEmbedExternal.View | null>(() => embed.value.$type === 'app.bsky.embed.external#view' ? embed.value.external : null)
+const embedImages = computed<AppBskyEmbedImages.View | null>(() => embed.value.$type === 'app.bsky.embed.images#view' ? embed.value.images : null)
+
+const embedType = computed(() => embed.value?.$type || null)
+
 const onLoadProfile = async () => {
   if (profileCardOpen.value === false) {
     authorDetails.value = await sessionStore.getActorProfile(props.author.handle, true)
@@ -60,7 +66,10 @@ const onLoadProfile = async () => {
 const bookmarkedCids = computed(() => bookmarkStore.bookmarkedCids)
 
 const isBookmarked = computed(() => {
-  return bookmarkedCids.value.includes(props.post.uri)
+  if (props.post.uri) {
+    return bookmarkedCids.value.includes(props.post.uri.toString())
+  }
+  return false
 })
 
 const { render } = useRichText()
@@ -85,13 +94,15 @@ const onBookmarkToogle = async (value: boolean) => {
   }
 }
 
-const getThread = (uri: string) => {
-  router.push({
-    name: 'thread',
-    params: {
-      uri: encodeURI(uri)
-    }
-  })
+const getThread = (uri: string | undefined) => {
+  if (uri !== undefined) {
+    router.push({
+      name: 'thread',
+      params: {
+        uri: encodeURI(uri)
+      }
+    })
+  }
 }
 
 const goProfile = (handle: string) => {
@@ -127,7 +138,7 @@ const goProfile = (handle: string) => {
       </div>
     </div>
     <div class="mt-3 ml-4">
-      <HoverCard @updated="onLoadProfile(event)">
+      <HoverCard @updated="onLoadProfile()">
         <HoverCardTrigger>
           <storm-ui-avatar
             class="cursor-pointer"
@@ -208,17 +219,17 @@ const goProfile = (handle: string) => {
       </div>
 
       <div
-        v-if="post.embed"
+        v-if="embed"
         class="flex-1 whitespace-break-spaces overflow-x-hidden break-words mx-0 px-0 items-start"
       >
-        <template v-if="post.embed.$type === 'app.bsky.embed.record#view'">
+        <template v-if="embedType=== 'app.bsky.embed.record#view'">
           Quote
         </template>
-        <template v-if="post.embed.$type === 'app.bsky.embed.images#view'">
-          <PostEmbedImages :images="post.embed.images" />
+        <template v-if="embedType=== 'app.bsky.embed.images#view'">
+          <PostEmbedImages :images="embedImages" />
         </template>
-        <template v-if="post.embed.$type === 'app.bsky.embed.external#view'">
-          <PostEmbedExternal :external="post.embed.external" />
+        <template v-if="embedType === 'app.bsky.embed.external#view' && embedExternal">
+          <PostEmbedExternal :external="embedExternal" />
         </template>
       </div>
       <div class="pb-3 grid-cols-3">

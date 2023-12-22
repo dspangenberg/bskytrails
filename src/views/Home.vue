@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { useRoute, type RouteLocationNormalized } from 'vue-router'
@@ -21,7 +21,9 @@ const { viewTimeline, isLoading } = storeToRefs(timelineStore)
 useInfiniteScroll(
   el,
   async () => {
-    await timelineStore.loadMore(viewTimeline.value.cursor)
+    if (viewTimeline.value?.cursor) {
+      await timelineStore.loadMore(viewTimeline.value.cursor)
+    }
   }
 )
 
@@ -32,16 +34,28 @@ const createFeedUri = (route: RouteLocationNormalized) => {
   return params
 }
 
+const actorParam = computed<string>(() => {
+  if (route.params?.handle) {
+    return route.params.handle.toString()
+  }
+  return profile.value?.handle.toString() || ''
+})
+
 watch(route, async (route) => {
   switch (route.name) {
     case 'bookmarks':
       await bookmarkStore.getBookmarkedPosts()
       break
     case 'profile':
-      await timelineStore.getTimelineByView('actor', route.params?.handle || profile.value?.handle)
+      if (actorParam.value !== undefined) {
+        await timelineStore.getTimelineByView('actor', actorParam.value)
+      }
+
       break
     case 'thread':
-      await timelineStore.getTimelineByView('thread', route.params?.uri)
+      if (route.params?.uri.toString()) {
+        await timelineStore.getTimelineByView('thread', route.params.uri.toString())
+      }
       break
     case 'feeds-timeline':
       await timelineStore.getTimelineByView('feed', createFeedUri(route))

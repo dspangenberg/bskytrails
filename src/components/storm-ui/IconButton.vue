@@ -59,7 +59,7 @@ const getVariant = computed(() => active.value && props.variant !== 'iconbar' ? 
 
 const realProps = computed(() => {
   const realProps = Object.assign({}, props)
-  realProps.variant = getVariant.value
+  // realProps.variant = getVariant.value
   return realProps
 })
 

@@ -12,7 +12,7 @@ type Agent = any
 
 export type ViewTimline = {
   view: string,
-  cursor?: string,
+  cursor?: string | null,
   feed: FeedPost[] | null
 }
 
@@ -122,16 +122,20 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const loadMore = async (cursor: string) => {
     if (lastCursor.value !== cursor) {
       const type = feedType.value
-      const loadedData = await getTimelineByView(feedType.value, oldParam.value || undefined, cursor)
-      if (loadedData?.feed.length) {
-        store.$patch((state) => {
-          if (state.viewTimeline) {
-            state.viewTimeline.cursor = loadedData?.cursor || null
-          }
-          for (const item of loadedData?.feed) {
-            state.viewTimeline?.feed?.push(item)
-          }
-        })
+      if (type) {
+        const loadedData = await getTimelineByView(type, oldParam.value || undefined, cursor)
+        if (Array.isArray(loadedData?.feed)) {
+          store.$patch((state) => {
+            if (state.viewTimeline) {
+              state.viewTimeline.cursor = loadedData?.cursor || null
+            }
+            if (Array.isArray(loadedData?.feed)) {
+              for (const item of loadedData.feed) {
+                state.viewTimeline?.feed?.push(item)
+              }
+            }
+          })
+        }
       }
     }
   }
@@ -205,7 +209,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   const postToggleLike = async (post: PostView) => {
-    const isLiked = !!post.viewer?.like
+    console.log(post)
+    const isLiked = !!post?.viewer?.like
     const result = isLiked ? await agent.value.deleteLike(post.viewer?.like) : await agent.value.like(post.uri, post.cid)
 
     let likeCount = post.likeCount || 0

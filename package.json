@@ -5,9 +5,6 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "generate": "drizzle-kit generate:sqlite",
-    "migrate": "node_modules/.bin/tsc migrate.ts",
-    "studio": "drizzle-kit studio",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",

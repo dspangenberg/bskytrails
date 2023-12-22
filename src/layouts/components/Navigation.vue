@@ -14,11 +14,17 @@ export interface Props {
 }
 
 const skySessionStore = useSkySessionStore()
-const { pinnedFeeds, isLoadingFeeds, isLoadingProfile, lists, isLoadingLists } = storeToRefs(skySessionStore)
+const { pinnedFeeds, isLoadingFeeds, lists, isLoadingLists, profile: storeProfile } = storeToRefs(skySessionStore)
 
 defineProps<Props>()
 
-const isMyProfile = computed(() => route.name === 'profile' && skySessionStore.profile.value?.handle === route.params.handle)
+const isMyProfile = computed(() => {
+  const profile = storeProfile.value || null
+  if (profile && route.name === 'profile') {
+    return profile.handle === route.params?.handle
+  }
+  return false
+})
 
 const feedParams = (uri: string) => {
   const parts = uri.replace('at://', '').split('/')
@@ -34,10 +40,10 @@ const feedParams = (uri: string) => {
 
 <template>
   <nav class="order-first  overflow-y-auto w-64 flex-none h-full flex flex-col">
-    <div class="flex-1">
+    <div class="flex-1 flex flex-col">
       <div
         v-if="profile"
-        class="mt-12 space-y-4"
+        class="mt-12 space-y-4 flex-1"
       >
         <app-account-button :profile="profile" />
         <storm-ui-nav-group>
@@ -139,6 +145,9 @@ const feedParams = (uri: string) => {
             active-route-path="/trends"
           />
         </storm-ui-nav-group>
+      </div>
+      <div class="flex-none p-4">
+        SkyTrails
       </div>
     </div>
   </nav>

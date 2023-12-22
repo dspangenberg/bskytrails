@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import { computed, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { db, type LocalSettings } from '@/db/index'
 import { useSkySessionStore } from './SkySessionStore.ts'
 
-interface IKeyValueStore {
+export type IKeyValueStore = {
   [key: string]: string | boolean | number
 }
 
@@ -23,22 +23,24 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
   const settings = ref<IKeyValueStore | null>(null)
 
   const readSetting = async (key: string, useDefaultValue: boolean = true) => {
-    const value = await db.localSettings
+    const record: LocalSettings | undefined = await db.localSettings
       .where({ did: did.value, key })
       .first()
-    return (useDefaultValue) ? value || defaultSettings[key] : value
+
+    if (record !== undefined && record?.value) {
+      return record.value
+    } else {
+      return (useDefaultValue) ? defaultSettings[key] : null
+    }
   }
 
   const saveSettings = async (settings: IKeyValueStore) => {
-    console.log(settings)
     const lSettings: IKeyValueStore | null = {}
     for (const [key, value] of Object.entries(settings)) {
-      console.log(key, value)
       lSettings[key] = value
     }
 
     store.$patch((state) => {
-      console.log(lSettings)
       state.settings = lSettings
     })
   }
@@ -47,8 +49,9 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
     const lSettings: IKeyValueStore = {}
     for (const [key] of Object.entries(defaultSettings)) {
       const value = await readSetting(key)
-      console.log(key, value)
-      lSettings[key] = value
+      if (value !== null) {
+        lSettings[key] = value
+      }
     }
     settings.value = lSettings
   }

@@ -1,21 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import PostEmbedImagesImage from './PostEmbedImagesImage.vue'
-
-export type AspectRatio = {
-  height: number,
-  width: number
-}
-
-export type EmbedImage = {
-  alt: string,
-  fullsize: string,
-  thumb: string,
-  aspectRatio: AspectRatio
-}
+import { AppBskyEmbedImages } from '@atproto/api'
 
 export interface Props {
-  images: EmbedImage[]
+  images: AppBskyEmbedImages.View
 }
 
 const props = defineProps<Props>()
