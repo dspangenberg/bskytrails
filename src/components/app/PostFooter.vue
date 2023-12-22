@@ -11,9 +11,10 @@ type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type FeedPost = AppBskyFeedDefs.FeedViewPost
+type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
-  post: FeedPost
+  post: PostView
   record: FeedPostRecord
   author: Author
   reason?: Reason

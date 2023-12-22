@@ -3,8 +3,8 @@ import { computed } from 'vue'
 import PostEmbedImagesImage from './PostEmbedImagesImage.vue'
 import { AppBskyEmbedImages } from '@atproto/api'
 
-export interface Props {
-  images: AppBskyEmbedImages.View
+export type Props = {
+  images: AppBskyEmbedImages.View[]
 }
 
 const props = defineProps<Props>()
@@ -18,17 +18,22 @@ const gridCols = computed(() => {
 
   }[props.images.length]
 })
+
+const getThumb = (image: AppBskyEmbedImages.View) => {
+  return image.thumb as string
+}
+
 </script>
 
 <template>
   <div
-    class="my-6 grid gap-2 mx-auto"
-    :class="[gridCols]"
+    class="my-6 grid gap-2 mx-auto pr-4"
+    :class="gridCols"
   >
     <PostEmbedImagesImage
       v-for="(image, index) in images"
       :key="index"
-      :image="image"
+      :image="getThumb(image)"
     />
   </div>
 </template>

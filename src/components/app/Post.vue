@@ -1,11 +1,15 @@
 <script setup lang="ts">
-// AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia
-import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
+// AppBskyEmbedRecord, AppBskyEmbedRecordWithMediaA ppBskyEmbedImages, AppBskyEmbedExternal
+import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
 import { computed, ref } from 'vue'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 import PostEmbedExternal from './PostEmbedExternal.vue'
 import PostEmbedImages from './PostEmbedImages.vue'
+import PostEmbedRecord from './PostEmbedRecord.vue'
+import PostAnswerContext from './PostAnswerContext.vue'
+
 import PostFooter from './PostFooter.vue'
+
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
 import { useRouter } from 'vue-router'
 import { useRichText } from '@/composables/useRichText.ts'
@@ -21,11 +25,11 @@ const sessionStore = await useSkySessionStore()
 
 const bookmarkStore = useBookmarkStore()
 type FeedPostRecord = AppBskyFeedPost.Record
-type FeedPost = AppBskyFeedDefs.FeedViewPost
 type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
 type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed | null
+type PostView = AppBskyFeedDefs.PostView
 
 const profileCardOpen = ref(false)
 const authorDetails = ref<AuthorDetailed | null>(null)
@@ -33,7 +37,7 @@ const authorDetails = ref<AuthorDetailed | null>(null)
 const router = useRouter()
 
 export interface Props {
-  post: FeedPost
+  post: PostView
   record: FeedPostRecord
   author: Author
   reason?: Reason
@@ -49,12 +53,17 @@ const avatarIcon = computed(() => {
   return undefined
 })
 
-const embed = computed(() => props.post.embed)
-
-const embedExternal = computed<AppBskyEmbedExternal.View | null>(() => embed.value.$type === 'app.bsky.embed.external#view' ? embed.value.external : null)
-const embedImages = computed<AppBskyEmbedImages.View | null>(() => embed.value.$type === 'app.bsky.embed.images#view' ? embed.value.images : null)
-
-const embedType = computed(() => embed.value?.$type || null)
+const embedComponent = computed(() => {
+  switch (props.record.embed?.$type) {
+    case 'app.bsky.embed.record#view':
+      return PostEmbedRecord
+    case 'app.bsky.embed.images':
+      return PostEmbedImages
+    case 'app.bsky.embed.external#view':
+      return PostEmbedExternal
+  }
+  return null
+})
 
 const onLoadProfile = async () => {
   if (profileCardOpen.value === false) {
@@ -77,9 +86,6 @@ const { render } = useRichText()
 const renderText = (record: FeedPostRecord) => {
   return render(record)
 }
-
-const myHoverableElement = ref()
-const isExpanded = useElementHover(myHoverableElement, { delayEnter: 500 })
 
 const props = defineProps<Props>()
 const isRepost = computed(() => props.reason?.$type === 'app.bsky.feed.defs#reasonRepost')
@@ -197,41 +203,29 @@ const goProfile = (handle: string) => {
         </div>
       </div>
 
-      <div
-        v-if="isReply"
-        class="text-sm leading-snug text-gray-500 text-left my-2 break-words flex-1 flex-wrap hyphens-auto border-l-4 pl-2"
-        @click="getThread(reply?.parent.uri)"
-      >
-        <span class="font-normal text-stone-400 ">
-          Antwort an {{ reply?.parent.author.handle }}</span>
-        <span
-          ref="myHoverableElement"
-          :class="!isExpanded ? 'line-clamp-2' : ''"
-          v-html="renderText(reply?.parent.record)"
-        />
-      </div>
+      <PostAnswerContext
+        v-if="isReply && reply"
+        :reply="reply"
+      />
 
       <div
-        class="text-lg leading-snug text-black text-left py-2 break-words flex-1 flex-wrap hyphens-auto markdown"
+        class="text-lg leading-snug text-black text-left py-2 mr-2 break-words flex-1 flex-wrap hyphens-auto markdown"
         @click="getThread(post?.uri)"
       >
         <span v-html="renderText(record)" />
       </div>
 
       <div
-        v-if="embed"
+        v-if="post.embed"
         class="flex-1 whitespace-break-spaces overflow-x-hidden break-words mx-0 px-0 items-start"
       >
-        <template v-if="embedType=== 'app.bsky.embed.record#view'">
-          Quote
-        </template>
-        <template v-if="embedType=== 'app.bsky.embed.images#view'">
-          <PostEmbedImages :images="embedImages" />
-        </template>
-        <template v-if="embedType === 'app.bsky.embed.external#view' && embedExternal">
-          <PostEmbedExternal :external="embedExternal" />
-        </template>
+        <component
+          :is="embedComponent"
+          :external="post.embed.external"
+          :images="post.embed.images"
+        />
       </div>
+
       <div class="pb-3 grid-cols-3">
         <PostFooter
           :post="post"

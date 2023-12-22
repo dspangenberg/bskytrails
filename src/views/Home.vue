@@ -50,7 +50,6 @@ watch(route, async (route) => {
       if (actorParam.value !== undefined) {
         await timelineStore.getTimelineByView('actor', actorParam.value)
       }
-
       break
     case 'thread':
       if (route.params?.uri.toString()) {

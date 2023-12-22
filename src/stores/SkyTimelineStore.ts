@@ -209,7 +209,6 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   const postToggleLike = async (post: PostView) => {
-    console.log(post)
     const isLiked = !!post?.viewer?.like
     const result = isLiked ? await agent.value.deleteLike(post.viewer?.like) : await agent.value.like(post.uri, post.cid)
 

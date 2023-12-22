@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { AppBskyEmbedImages } from '@atproto/api'
-export interface Props {
-  image: AppBskyEmbedImages.ViewImage
+
+export type Props = {
+  image: string
 }
 
 defineProps<Props>()
@@ -11,7 +11,7 @@ defineProps<Props>()
 <template>
   <div>
     <img
-      :src="image.thumb"
+      :src="image"
       class="object-cover border rounded-md shadow-sm"
       alt=""
     >

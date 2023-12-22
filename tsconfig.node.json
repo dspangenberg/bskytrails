@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
     "vite.config.*",
     "vitest.config.*",
@@ -13,15 +13,14 @@
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "noEmit": true,
-    "allowImportingTsExtensions": true,
     "types": [
       "node",
       "unplugin-vue-macros/macros-global",
       "@vueuse/core",
       "@vueuse/integrations",
       "@atproto/api",
-      "'lodash",
-      "@intlify/unplugin-vue-i18n/messages"
+      "@intlify/unplugin-vue-i18n/messages",
+      "lodash"
     ]
   }
 }

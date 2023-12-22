@@ -5,6 +5,7 @@ import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 
 import { AppBskyFeedDefs } from '@atproto/api'
 type FeedPost = AppBskyFeedDefs.FeedViewPost
+type PostView = AppBskyFeedDefs.PostView
 
 export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
   const bookmarks: Ref<Bookmark[] | null> = ref(null)
@@ -30,20 +31,19 @@ export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
     await skySessionStore.getPosts(postUris)
   }
 
-  const addBookmark = async (post: FeedPost) => {
+  const addBookmark = async (post: PostView) => {
     did.value = skySessionStore.getCurrentDid()
-
     await db.bookmarks.add({
       did: did.value,
-      uri: post.post.uri,
-      indexedAt: post.post.indexedAt,
+      uri: post.uri,
+      indexedAt: post.indexedAt,
       bookmarkedAt: new Date().toISOString()
     })
 
     await getBookmarks()
   }
 
-  const removeBookmark = async (post: FeedPost) => {
+  const removeBookmark = async (post: PostView) => {
     const bookmarkedPost = await db.bookmarks
       .where({ did: did.value, uri: post.uri })
       .first()
