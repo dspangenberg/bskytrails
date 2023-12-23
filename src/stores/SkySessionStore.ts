@@ -1,16 +1,23 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { BskyAgent, AppBskyGraphDefs, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedDefs, type AtpSessionData } from '@atproto/api'
+import { BskyAgent, AppBskyGraphDefs, AppBskyNotificationListNotifications, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedDefs, type AtpSessionData } from '@atproto/api'
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 
 type FeedGenerator = AppBskyFeedDefs.GeneratorView
 type ListView = AppBskyGraphDefs.ListView
+type Notification = AppBskyNotificationListNotifications.Notification
 
 type Agent = any
 export type Profile = AppBskyActorDefs.ProfileViewDetailed
 
 export type IKeyValueStore = {
   [key: string]: string | boolean | number
+}
+
+type NotificationView = {
+  notifications: Notification[]
+  cursor?: string
+  seenAt?: string
 }
 
 export const useSkySessionStore = defineStore('sky-session-store', () => {
@@ -20,11 +27,12 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
   const pinnedFeeds = ref<FeedGenerator[] | null>(null)
   const lists = ref<ListView[] | null>(null)
   const timeline = ref<FeedPost[] | null>(null)
+  const notificationView = ref<NotificationView | null>(null)
   const parentPost = ref<FeedPost | null>(null)
   const activeFeedName = ref<string | null>(null)
+  const unreadNotificationsCounter = ref<number>(0)
 
   const service = ref<string>('https://bsky.social')
-  const store = useSkySessionStore()
 
   const isLoadingProfile = ref(false)
   const isTimeLineLoading = ref(false)
@@ -136,6 +144,29 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     }
   }
 
+  const getNotifications = async () => {
+    await getAgent()
+    const params: IKeyValueStore = {}
+    if (notificationView.value?.cursor) {
+      // params.cursor = notificationView.value?.cursor
+    }
+    const { data, success } = await agent.value.listNotifications(params)
+    if (success) {
+      notificationView.value = {
+        notifications: data.notifications,
+        cursor: data.cursor,
+        seenAt: data.seenAt
+      }
+    }
+  }
+
+  const getUnreadNotificationsCount = async () => {
+    const { data, success } = await agent.value.countUnreadNotifications()
+    if (success) {
+      unreadNotificationsCounter.value = data.count
+    }
+  }
+
   const getMyProfile = async () => {
     if (agent.value?.session?.did) {
       isLoadingLists.value = true
@@ -149,6 +180,8 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
 
       await getActorLists(agent.value.session?.did)
       await getPreferences()
+      await getUnreadNotificationsCount()
+      await getNotifications()
 
       isLoadingProfile.value = false
     }
@@ -173,6 +206,10 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     isLoadingFeeds,
     actor,
     parentPost,
+    getNotifications,
+    getUnreadNotificationsCount,
+    notificationView,
+    unreadNotificationsCounter,
     follow,
     getActorProfile,
     isLoggedIn,

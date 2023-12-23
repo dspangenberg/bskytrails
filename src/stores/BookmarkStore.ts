@@ -4,7 +4,6 @@ import { db, type Bookmark } from '@/db/index'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 
 import { AppBskyFeedDefs } from '@atproto/api'
-type FeedPost = AppBskyFeedDefs.FeedViewPost
 type PostView = AppBskyFeedDefs.PostView
 
 export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
@@ -27,10 +26,8 @@ export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
     did.value = skySessionStore.getCurrentDid()
 
     const posts = await getBookmarks()
-    console.log(posts)
     const postUris = posts.map(item => item.uri)
     const feed = await skySessionStore.getPosts(postUris)
-    console.log(feed)
     return feed
   }
 

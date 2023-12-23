@@ -9,7 +9,6 @@ import { useInfiniteScroll } from '@vueuse/core'
 
 const el = ref<HTMLElement | null>(null)
 
-
 const timelineStore = await useSkyTimelineStore()
 
 const route = useRoute()
@@ -74,7 +73,7 @@ watch(route, async (route) => {
     <ul
       v-if="!isLoading && viewTimeline"
       ref="el"
-      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto"
+      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto "
     >
       <app-post
         v-for="(post, index) in viewTimeline.feed"
@@ -86,13 +85,5 @@ watch(route, async (route) => {
         :record="post.post?.record"
       />
     </ul>
-    <div
-      v-else
-      class="flex items-center justify-center  flex-1"
-    >
-      <storm-ui-spinner
-        :size="12"
-      />
-    </div>
   </div>
 </template>

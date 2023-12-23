@@ -33,7 +33,7 @@ const form = reactive(settings)
         />
         <storm-ui-segmented-control-item
           value="bsky"
-          label="Einstellungen (BlueSky)"
+          label="BlueSky-Einstellungen"
         />
         <storm-ui-segmented-control-item
           value="moderation"

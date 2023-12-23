@@ -40,7 +40,7 @@ const props = defineProps<Props>()
 </script>
 <template>
   <div
-    class="text-sm leading-snug text-gray-500 text-left my-2 mr-2 break-words flex-1 flex-wrap hyphens-auto border-l-4 pl-2"
+    class="text-sm leading-snug text-gray-500 text-left my-2 mr-2 break-words flex-1 flex-wrap hyphens-auto border-l-4 pl-2 animate-in slide-in-from-top animate-out slide-out-from-bottom"
     @click="getThread()"
   >
     <span class="font-normal text-stone-400 ">

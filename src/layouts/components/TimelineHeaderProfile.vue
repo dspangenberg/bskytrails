@@ -2,7 +2,7 @@
 import { useTemplateFilter } from '@/composables/useTemplateFilter.ts'
 import { storeToRefs } from 'pinia'
 import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const { toMd, formatInt } = useTemplateFilter()
@@ -15,7 +15,7 @@ export interface Props {
 const skySessionStore = useSkySessionStore()
 const { isLoadingProfile, actor } = storeToRefs(skySessionStore)
 
-defineProps<Props>()
+const isMe = computed(() => actor.value.did === skySessionStore.getCurrentDid())
 
 const onFollow = async () => {
   if (actor.value?.did) {
@@ -56,12 +56,15 @@ watch(route, async (route) => {
             <div class="text-sm text-gray-600 font-normal pt-1">
               @{{ actor.handle }}
               <span
-                v-if="actor.viewer?.followedBy"
+                v-if="actor.viewer?.followedBy && !isMe"
                 class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-sm font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
               >Folgt Dir</span>
             </div>
           </div>
-          <div class="text-base font-medium text-center space-x-2 ">
+          <div
+            v-if="!isMe"
+            class="text-base font-medium text-center space-x-2"
+          >
             <storm-ui-button
               v-if="actor.viewer?.following"
               icon="user-x"
@@ -72,6 +75,7 @@ watch(route, async (route) => {
             <storm-ui-button
               v-else
               icon="user-check"
+              variant="primary"
               @click="onFollow"
             >
               Folgen

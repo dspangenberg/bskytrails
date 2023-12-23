@@ -17,7 +17,7 @@ const avatar = computed<string>(() => props.profile?.avatar || '')
   <div class="w-fullitems-center">
     <storm-ui-menu
       v-if="profile"
-      origin="bottom"
+      origin="top"
     >
       <template #trigger>
         <button class="block  border-4  hover:border-gray-200 border-transparent my-1 rounded-md active:bg-gray-100 mx-auto">

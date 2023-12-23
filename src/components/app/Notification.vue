@@ -1,36 +1,68 @@
 <script setup lang="ts">
 // AppBskyEmbedRecord, AppBskyEmbedRecordWithMediaA ppBskyEmbedImages, AppBskyEmbedExternal
-import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
+import { AppBskyFeedPost, AppBskyNotificationListNotifications, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
 import { computed, ref } from 'vue'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 import PostEmbedExternal from './PostEmbedExternal.vue'
 import PostEmbedImages from './PostEmbedImages.vue'
 import PostEmbedRecord from './PostEmbedRecord.vue'
 import PostAnswerContext from './PostAnswerContext.vue'
-import PostProfileHoverCard from './PostProfileHoverCard.vue'
 
 import PostFooter from './PostFooter.vue'
 
+import PostProfileHoverCard from './PostProfileHoverCard.vue'
 import { useRouter } from 'vue-router'
 import { useRichText } from '@/composables/useRichText.ts'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger
+} from '@/components/shadn/ui/hover-card'
+import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
+
+const sessionStore = await useSkySessionStore()
 
 const bookmarkStore = useBookmarkStore()
 type FeedPostRecord = AppBskyFeedPost.Record
 type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
-
+type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed | null
 type PostView = AppBskyFeedDefs.PostView
+type Notification = AppBskyNotificationListNotifications.Notification
+
+const profileCardOpen = ref(false)
+const authorDetails = ref<AuthorDetailed | null>(null)
+const props = defineProps<Props>()
 
 const router = useRouter()
 
 export interface Props {
-  post: PostView
-  record: FeedPostRecord
-  author: Author
-  reason?: Reason
-  reply?: Reply
+  notification: Notification
 }
+
+const author = computed<AuthorDetailed>(() => props.notification.author)
+const typeIcon = computed<string>(() => {
+  switch (props.notification.reason) {
+    case 'like':
+      return {
+        icon: 'heart-filled',
+        color: 'text-red-500'
+      }
+    case 'follow':
+      return {
+        icon: 'star-filled',
+        color: 'text-green-500'
+      }
+    case 'reply':
+      return {
+        icon: 'message-circle-2-filled',
+        color: 'text-blue-500'
+      }
+  }
+  return 'dots'
+})
+
 const avatarIcon = computed(() => {
   if (isRepost.value) {
     return 'message-share'
@@ -53,6 +85,13 @@ const embedComponent = computed(() => {
   return null
 })
 
+const onLoadProfile = async () => {
+  if (profileCardOpen.value === false) {
+    authorDetails.value = await sessionStore.getActorProfile(props.author.handle, true)
+    profileCardOpen.value = true
+  }
+}
+
 const bookmarkedCids = computed(() => bookmarkStore.bookmarkedCids)
 
 const isBookmarked = computed(() => {
@@ -68,7 +107,6 @@ const renderText = (record: FeedPostRecord) => {
   return render(record)
 }
 
-const props = defineProps<Props>()
 const isRepost = computed(() => props.reason?.$type === 'app.bsky.feed.defs#reasonRepost')
 const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.defs#postView')
 const indexedAtFormated = computed(() => props.post?.indexedAt)
@@ -104,53 +142,46 @@ const goProfile = (handle: string) => {
 </script>
 
 <template>
-  <li class="grid grid-cols-10 px-2 space-x-2 animate-in fade-in  duration-150">
+  <li class="grid grid-cols-10 px-2 space-x-2">
     <div class="col-start-2 col-span-11">
       <div
         v-if="isRepost"
         class="text-stone-400 text-sm px-4 pt-4 flex items-center"
       >
         <div
-          class="flex-1 flex items-center"
+          class="flex-1"
         >
-          Repost von
+          Repost
+          von
           <a
-            class="font-medium cursor-pointer flex items-center"
-            @click="goProfile(reason?.by?.handle)"
+            href=""
+            class="font-medium hover:underline"
           >
-            <PostProfileHoverCard
-              :actor="reason?.by"
-            >
-              <div class="flex items-center pl-1">
-                <storm-ui-avatar
-                  class="cursor-pointer"
-                  :src="reason?.by.avatar"
-                  :alt="reason?.by.handle"
-                  :size="6"
-                  @click="goProfile(reason?.by?.handle)"
-                />
-                <span class="pl-1">
-                  {{ reason?.by?.handle }}
-                </span>
-              </div>
-            </PostProfileHoverCard>
+            {{ reason?.by?.displayName }}
           </a>
         </div>
       </div>
     </div>
-    <div class="mt-2 ml-4">
-      <PostProfileHoverCard
-        :actor="author"
-      >
-        <storm-ui-avatar
-          class="cursor-pointer"
-          :src="author.avatar"
-          :alt="author.handle"
-          :size="12"
-          :icon="avatarIcon"
-          @click="goProfile(author.handle)"
-        />
-      </PostProfileHoverCard>
+    <div class="mt-3 ml-4">
+      <HoverCard @updated="onLoadProfile()">
+        <HoverCardTrigger>
+          <storm-ui-avatar
+            class="cursor-pointer"
+            :src="author.avatar"
+            :alt="author.handle"
+            :size="12"
+            :icon="typeIcon.icon"
+            :icon-color="typeIcon.color"
+            @click="goProfile(author.handle)"
+          />
+        </HoverCardTrigger>
+        <HoverCardContent class="w-full max-w-sm min-w-[24rem]">
+          <PostProfileHoverCard
+            :profile="author"
+            :complete-profile="authorDetails"
+          />
+        </HoverCardContent>
+      </HoverCard>
     </div>
     <div class="col-span-11 pl-2">
       <div class="min-w-0 flex-1 flex">
@@ -177,52 +208,9 @@ const goProfile = (handle: string) => {
         <div class="text-gray-400 text-sm flex items-center flex-none space-x-2">
           <storm-ui-time-ago
             v-tooltip="indexedAtFormated"
-            :date="post.indexedAt"
+            :date="notification.indexedAt"
           />
-          <div>
-            <storm-ui-action-with-counter
-              icon-default="bookmark"
-              icon-active="bookmark-filled"
-              icon-size="lg"
-              color="text-blue-400"
-              :active="isBookmarked === true"
-              @click="onBookmarkToogle(isBookmarked)"
-            />
-          </div>
         </div>
-      </div>
-
-      <PostAnswerContext
-        v-if="isReply && reply"
-        :reply="reply"
-      />
-
-      <div
-        class="text-lg leading-snug text-black text-left py-2 mr-2  flex-1 flex-wrap break-words hyphens-auto markdown"
-        @click="getThread(post?.uri)"
-      >
-        <span v-html="renderText(record)" />
-      </div>
-
-      <div
-        v-if="post.embed"
-        class="flex-1 whitespace-break-spaces overflow-x-hidden break-words mx-0 px-0 items-start"
-      >
-        <component
-          :is="embedComponent"
-          :external="post.embed.external"
-          :images="post.embed.images"
-        />
-      </div>
-
-      <div class="pb-3 grid-cols-3">
-        <PostFooter
-          :post="post"
-          :reason="reason"
-          :record="record"
-          :author="author"
-          :reply="reply"
-        />
       </div>
     </div>
   </li>

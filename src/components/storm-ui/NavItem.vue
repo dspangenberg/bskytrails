@@ -12,7 +12,7 @@ export interface Props {
   activeRoutePath?: string
   badgeAnimate?: boolean
   badgeColor?: string
-  badgeCount?: number
+  badgeCount?: number | boolean
   badgeDot?: boolean
   disabled?: boolean
   exact?: boolean

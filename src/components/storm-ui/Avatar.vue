@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 export interface Props {
-  src: string
+  src: string | undefined
   alt: string
   icon?: string
   iconColor?: string
@@ -35,11 +35,17 @@ const sizeClass = computed(() => {
 <template>
   <div class=" border-stone-200 border rounded-full max-w-fit relative block">
     <img
+      v-if="src"
       class=" rounded-full object-cover object-center border-2 border-white"
       :class="sizeClass"
       :src="src"
       :alt="alt"
     >
+    <span
+      v-else
+      class="rounded-full block"
+      :class="sizeClass"
+    />
     <span
       v-if="spinner"
       class="absolute bottom-1 right-2 h-4 w-4 rounded-full"

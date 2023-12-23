@@ -34,6 +34,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const limit = ref<number>(10)
   const feedType = ref<string | undefined>(undefined)
   const oldParam = ref<string | null>(null)
+  const newestPost = ref<string | null>(null)
+  const timelineUpdated = ref<boolean>(false)
 
   type FeedParams = {
     key?: string
@@ -61,6 +63,21 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
+  const pollTimeline = async () => {
+    agent.value = await skySessionStore.getAgent()
+    const { data, success } = await agent.value.getTimeline({ limit: 1 })
+    if (success && data.feed[0].post) {
+      const newPost: string = data.feed[0].post.uri
+      if (newestPost.value !== null && newPost !== newestPost.value) {
+        store.$patch((state) => {
+          state.timelineUpdated = true
+        })
+      } else {
+        newestPost.value = newPost
+      }
+    }
+  }
+
   const getTimelineByView = async (type: string, value?: string, cursor?: string) => {
     feedType.value = type
 
@@ -77,7 +94,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     const key = getKeyByType(type)
 
     const params: FeedParams = {
-      limit: limit.value
+      limit: cursor ? 5 : limit.value
     }
 
     if (key !== undefined && value !== undefined) {
@@ -146,6 +163,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   const getTimeline = async (params: FeedParams) => {
+    newestPost.value = null
+    timelineUpdated.value = false
     const { data, success } = await agent.value.getTimeline(params)
     if (success) {
       return {
@@ -200,8 +219,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   const getBookmarksFeed = async () => {
-    const posts = await bookmarkStore.getBookmarkedPosts()
-    console.log(posts)
+    const posts = await bookmarkStore.getBookmarkedPosts() as FeedPost[]
     const data: ViewTimline = {
       view: 'feed-bookmarks',
       cursor: '',
@@ -285,9 +303,11 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     isLoading,
     loadMore,
     viewTimeline,
+    pollTimeline,
     getFeedDetails,
     getTimelineByView,
     postToggleLike,
-    postToggleRepost
+    postToggleRepost,
+    timelineUpdated
   }
 })
