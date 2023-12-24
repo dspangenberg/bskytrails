@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { AppBskyActorDefs } from '@atproto/api'
 import { useTemplateFilter } from '@/composables/useTemplateFilter.ts'
+import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
+import { computed } from 'vue'
+
+const skySessionStore = useSkySessionStore()
 
 const { toMd } = useTemplateFilter()
 
@@ -12,7 +16,9 @@ export interface Props {
   completeActorProfile: AuthorDetailed | null
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const isMe = computed(() => props.actor.did === skySessionStore.getCurrentDid())
+
 </script>
 
 <template>
@@ -27,7 +33,7 @@ defineProps<Props>()
           :spinner="!completeActorProfile"
         />
       </div>
-      <div class="ml-2 flex-1">
+      <div class="ml-2 flex-1 truncate mr-2">
         <div
           v-if="actor.displayName"
           class="text-lg font-medium"
@@ -35,9 +41,15 @@ defineProps<Props>()
           {{ actor.displayName }}
         </div>
         <div
-          class="text-sm text-gray-500"
+          class="text-sm text-gray-500 truncate"
         >
-          {{ actor.handle }}
+          <span
+            v-if="actor.viewer?.followedBy && !isMe"
+            class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+          >
+            Folgt Dir
+          </span>
+          @{{ actor.handle }}
         </div>
       </div>
       <div

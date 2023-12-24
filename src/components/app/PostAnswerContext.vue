@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBskyFeedDefs, AppBskyFeedPost, AppBskyActorDefs } from '@atproto/api'
+import { AppBskyFeedDefs, AppBskyActorDefs } from '@atproto/api'
 import { useRichText } from '@/composables/useRichText.ts'
 import { useElementHover } from '@vueuse/core'
 import { computed, ref } from 'vue'
@@ -7,7 +7,6 @@ import { useRouter } from 'vue-router'
 import PostOtherAccountAction from './PostOtherAccountAction.vue'
 
 type Reply = AppBskyFeedDefs.ReplyRef
-type FeedPostRecord = AppBskyFeedPost.Record
 type Author = AppBskyActorDefs.ProfileViewBasic
 
 const router = useRouter()
@@ -38,7 +37,7 @@ const getThread = () => {
 
 const author = computed(() => props.reply?.parent?.author as Author || null)
 const myHoverableElement = ref()
-const isExpanded = useElementHover(myHoverableElement, { delayEnter: 500 })
+const isExpanded = useElementHover(myHoverableElement, { delayEnter: 1000 })
 
 </script>
 <template>

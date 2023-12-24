@@ -54,11 +54,11 @@ watch(route, async (route) => {
           <div class="flex-1 text-black">
             {{ actor.displayName }}
             <div class="text-sm text-gray-600 font-normal pt-1">
-              @{{ actor.handle }}
               <span
                 v-if="actor.viewer?.followedBy && !isMe"
                 class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-sm font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
               >Folgt Dir</span>
+              @{{ actor.handle }}
             </div>
           </div>
           <div

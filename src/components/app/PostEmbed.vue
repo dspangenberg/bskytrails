@@ -37,6 +37,7 @@ const embedComponent = computed(() => {
   >
     <component
       :is="embedComponent"
+      v-if="type"
       :external="embed.external"
       :images="embed.images"
       :record="embed.record"

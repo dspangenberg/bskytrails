@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// AppBskyEmbedRecord, AppBskyEmbedRecordWithMediaA ppBskyEmbedImages, AppBskyEmbedExternal
 import { AppBskyFeedDefs } from '@atproto/api'
 import PostAnswerContext from './PostAnswerContext.vue'
 

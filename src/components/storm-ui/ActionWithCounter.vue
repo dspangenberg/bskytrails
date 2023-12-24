@@ -13,7 +13,7 @@ export interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  color: 'text-blue-500',
+  color: 'text-sky-700',
   variant: 'error',
   counter: undefined,
   active: false,
@@ -35,7 +35,7 @@ const sizeClass = computed(() => {
     <storm-ui-icon
       :name="active ? iconActive : iconDefault"
       class="cursor-pointer"
-      :class="[sizeClass, active ? color : `text-gray-400 hover:${color}`]"
+      :class="[sizeClass, active ? color : `text-sky-700 hover:${color}`]"
     />
     <div
       v-if="counter !== undefined"

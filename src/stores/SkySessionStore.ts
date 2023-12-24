@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { BskyAgent, AppBskyGraphDefs, AppBskyNotificationListNotifications, type AppBskyActorDefs, type AtpSessionEvent, type AppBskyFeedDefs, type AtpSessionData } from '@atproto/api'
+
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 
 type FeedGenerator = AppBskyFeedDefs.GeneratorView

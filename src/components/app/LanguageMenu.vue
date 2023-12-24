@@ -10,7 +10,7 @@ import {
 </script>
 
 <template>
-  <div class="flex items-center flex-1 p-4">
+  <div class="flex items-end flex-1">
     <div class="flex-none">
       <DropdownMenu>
         <DropdownMenuTrigger>

@@ -51,8 +51,8 @@ const typeIcon = computed<string>(() => {
       }
     case 'follow':
       return {
-        icon: 'star-filled',
-        color: 'text-green-500'
+        icon: 'butterfly',
+        color: 'text-sky-500'
       }
     case 'reply':
       return {

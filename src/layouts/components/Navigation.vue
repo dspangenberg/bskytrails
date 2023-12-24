@@ -2,14 +2,18 @@
 import { type Profile, useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useSettingsStore } from '@/stores/SettingsStore.ts'
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
+import { useSound } from '@vueuse/sound'
+import notificationSound from '@/assets/sounds/Glass_Rise1.wav'
 
 const settingsStore = useSettingsStore()
 const { settings } = storeToRefs(settingsStore)
 const timelineStore = await useSkyTimelineStore()
 const { timelineUpdated } = storeToRefs(timelineStore)
+
+const { play: playNotificationSound } = useSound(notificationSound)
 
 const route = useRoute()
 export interface Props {
@@ -17,7 +21,7 @@ export interface Props {
 }
 
 const skySessionStore = useSkySessionStore()
-const { unreadNotificationsCounter, pinnedFeeds, isLoadingFeeds, lists, isLoadingLists, profile: storeProfile, isLoadingProfile } = storeToRefs(skySessionStore)
+const { unreadNotificationsCounter, pinnedFeeds, isLoadingFeeds, lists, isLoadingLists, profile: storeProfile } = storeToRefs(skySessionStore)
 
 defineProps<Props>()
 
@@ -27,6 +31,12 @@ const isMyProfile = computed(() => {
     return profile.handle === route.params?.handle
   }
   return false
+})
+
+watch(unreadNotificationsCounter, async (newCounter: number, oldCounter: number) => {
+  if (newCounter > oldCounter) {
+    await playNotificationSound()
+  }
 })
 
 const feedParams = (uri: string) => {
@@ -160,7 +170,7 @@ const activeRoute = (name: string, uri: string) => {
           </storm-ui-nav-group>
         </template>
       </div>
-      <div class="flex-none p-4 flex items-center ">
+      <div class="flex-none p-4 flex items-end ">
         <div class="flex-none">
           <storm-ui-icon
             name="butterfly"
@@ -171,7 +181,7 @@ const activeRoute = (name: string, uri: string) => {
         <div class="text-stone-700 flex-1">
           papillon
         </div>
-        <div class="flex-none space-x-2 flex items-center">
+        <div class="flex-none space-x-2 flex items-end">
           <AppLanguageMenu />
         </div>
       </div>

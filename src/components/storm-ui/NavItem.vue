@@ -119,7 +119,7 @@ const isActive = computed(() => {
         >
           <storm-ui-icon
             :name="icon"
-            :class="[disabled ? 'text-gray-300 cursor-not-allowed' : active ? 'text-black ' : 'text-gray-700 group-hover:text-black', 'flex-shrink-0 mr-1.5 h-5 w-5 ']"
+            :class="[disabled ? 'text-gray-300 cursor-not-allowed' : active ? 'text-black ' : 'text-sky-700 group-hover:text-black', 'flex-shrink-0 mr-1.5 h-5 w-5 ']"
             :stroke-width="iconStrokeWidth"
           />
         </div>

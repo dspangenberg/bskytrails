@@ -14,17 +14,19 @@ const avatar = computed<string>(() => props.profile?.avatar || '')
 </script>
 
 <template>
-  <div class="w-fullitems-center">
+  <div class="w-full items-center">
     <storm-ui-menu
       v-if="profile"
       origin="top"
     >
       <template #trigger>
-        <button class="block  border-4  hover:border-gray-200 border-transparent my-1 rounded-md active:bg-gray-100 mx-auto">
+        <button class="mx-auto inline  hover:border-gray-200 border-transparent my-1 rounded-md active:bg-gray-100">
           <storm-ui-avatar
             :src="avatar"
             :size="12"
             :alt="profile.handle"
+            icon="butterfly"
+            icon-color="text-sky-700"
           />
         </button>
       </template>

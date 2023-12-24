@@ -1,7 +1,5 @@
-import { RichText, AppBskyFeedPost, AppBskyRichtextFacet, AppBskyFeedDefs } from '@atproto/api'
+import { RichText, AppBskyRichtextFacet } from '@atproto/api'
 import { marked } from 'marked'
-
-type FeedPostRecord = AppBskyFeedPost.Record
 
 export function useRichText () {
   const render = (text: string, facets: AppBskyRichtextFacet.Main[]) => {

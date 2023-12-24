@@ -1,8 +1,8 @@
 <script setup lang="ts">
-
-import { AppBskyFeedPost, AppBskyFeedDefs } from '@atproto/api'
+import { AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import PostContentMain from './PostContentMain.vue'
 import PostContentContext from './PostContentContext.vue'
+import PostContentMedia from './PostContentMedia.vue'
 import { computed } from 'vue'
 
 type Reply = AppBskyFeedDefs.ReplyRef
@@ -13,6 +13,8 @@ export interface Props {
   type: string
   record: FeedPostRecord
   reply?: Reply
+  embedType: string | undefined
+  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
 }
 
 const props = defineProps<Props>()
@@ -34,10 +36,11 @@ const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.def
         :facets="record.facets"
       />
     </div>
-    <!--
     <div>
-      <PostContentMedia />
+      <PostContentMedia
+        :embed="embed"
+        :type="embedType"
+      />
     </div>
-    -->
   </div>
 </template>

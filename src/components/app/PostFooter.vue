@@ -2,7 +2,9 @@
 import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
 import { computed } from 'vue'
+import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 
+const bookmarkStore = useBookmarkStore()
 const skyTimelineStore = useSkyTimelineStore()
 
 type FeedPostRecord = AppBskyFeedPost.Record
@@ -10,7 +12,6 @@ type Reply = AppBskyFeedDefs.ReplyRef
 type Reason = AppBskyFeedDefs.ReasonRepost
 type Author = AppBskyActorDefs.ProfileViewBasic
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
-type FeedPost = AppBskyFeedDefs.FeedViewPost
 type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
@@ -20,10 +21,17 @@ export interface Props {
   reason?: Reason
   reply?: Reply
 }
+const props = defineProps<Props>()
 
 const viewer = computed(() => props.post.viewer as FeedViewPost)
+const bookmarkedCids = computed(() => bookmarkStore.bookmarkedCids)
 
-const props = defineProps<Props>()
+const isBookmarked = computed(() => {
+  if (props.post.uri) {
+    return bookmarkedCids.value.includes(props.post.uri.toString())
+  }
+  return false
+})
 
 const onLikePost = async () => {
   await skyTimelineStore.postToggleLike(props.post)
@@ -34,6 +42,14 @@ const onRepost = async () => {
 }
 
 const isRepost = computed(() => !!viewer.value?.repost)
+
+const onBookmarkToogle = async (value: boolean) => {
+  if (value) {
+    await bookmarkStore.removeBookmark(props.post)
+  } else {
+    await bookmarkStore.addBookmark(props.post)
+  }
+}
 
 const onDump = () => {
   const dump = {
@@ -96,7 +112,15 @@ const onDump = () => {
         @click="onLikePost"
       />
     </div>
-    <div />
+    <div>
+      <storm-ui-action-with-counter
+        icon-default="bookmark"
+        icon-active="bookmark-filled"
+        color="text-sky-700"
+        :active="isBookmarked"
+        @click="onBookmarkToogle(isBookmarked)"
+      />
+    </div>
     <div>
       <storm-ui-menu
         origin="top-right"

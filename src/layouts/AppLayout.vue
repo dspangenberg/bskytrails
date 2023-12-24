@@ -42,7 +42,7 @@ const title = computed(() => {
     case 'notifications':
       return 'Benachrichtigungen'
     default:
-      return 'Start'
+      return 'Bluesky'
   }
 })
 

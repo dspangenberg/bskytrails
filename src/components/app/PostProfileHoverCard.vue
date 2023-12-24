@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { AppBskyActorDefs } from '@atproto/api'
-import { useTemplateFilter } from '@/composables/useTemplateFilter.ts'
 import { ref } from 'vue'
 import PostProfileHoverCardContent from './PostProfileHoverCardContent.vue'
 import {

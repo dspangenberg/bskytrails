@@ -1,20 +1,10 @@
 <script setup lang="ts">
-import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
-import { computed, ref } from 'vue'
-import PostContent from './PostContent.vue'
-import ListViewItem from './ListViewItem.vue'
+import { AppBskyActorDefs } from '@atproto/api'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
-import PostFooter from './PostFooter.vue'
-
 import { useRouter } from 'vue-router'
-
-type FeedPostRecord = AppBskyFeedPost.Record
-type Reply = AppBskyFeedDefs.ReplyRef
-type Reason = AppBskyFeedDefs.ReasonRepost
 
 type Author = AppBskyActorDefs.ProfileViewBasic
 type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
-type PostView = AppBskyFeedDefs.PostView
 
 const router = useRouter()
 

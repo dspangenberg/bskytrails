@@ -110,6 +110,8 @@ const goProfile = (handle: string) => {
         :record="record"
         :reply="reply"
         :type="record.$type"
+        :embed="post.embed"
+        :embed-type="post.embed?.$type"
       />
     </template>
     <template #footer>

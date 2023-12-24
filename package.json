@@ -23,6 +23,7 @@
     "@vueuse/components": "^10.7.0",
     "@vueuse/core": "^10.7.0",
     "@vueuse/integrations": "^10.7.0",
+    "@vueuse/sound": "^2.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",

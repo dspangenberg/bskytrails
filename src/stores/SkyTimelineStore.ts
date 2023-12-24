@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { AtUri, AppBskyFeedDefs } from '@atproto/api'
 import { useSkySessionStore } from './SkySessionStore.ts'
 
-import { set, unset } from 'lodash'
+import { set, unset, uniqBy } from 'lodash'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
 
 type FeedPost = AppBskyFeedDefs.FeedViewPost
@@ -170,7 +170,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       return {
         view: 'timeline',
         cursor: data.cursor,
-        feed: data.feed
+        feed: uniqBy(data.feed, 'post.uri') as FeedPost[]
       }
     }
     return null
