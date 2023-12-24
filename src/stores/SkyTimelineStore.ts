@@ -66,7 +66,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const pollTimeline = async () => {
     agent.value = await skySessionStore.getAgent()
     const { data, success } = await agent.value.getTimeline({ limit: 1 })
-    if (success && data.feed[0].post) {
+    if (success && data.feed[0]?.post) {
       const newPost: string = data.feed[0].post.uri
       if (newestPost.value !== null && newPost !== newestPost.value) {
         store.$patch((state) => {

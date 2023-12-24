@@ -73,7 +73,7 @@ watch(route, async (route) => {
     <ul
       v-if="!isLoading && viewTimeline"
       ref="el"
-      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto "
+      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto overflow-x-hidden "
     >
       <app-post
         v-for="(post, index) in viewTimeline.feed"
@@ -81,6 +81,8 @@ watch(route, async (route) => {
         :author="post.post?.author"
         :post="post.post"
         :reply="post.reply"
+        :indexed-at="post.post?.indexedAt"
+        :uri="post.post.uri"
         :reason="post.reason"
         :record="post.post?.record"
       />

@@ -164,12 +164,12 @@ const activeRoute = (name: string, uri: string) => {
         <div class="flex-none">
           <storm-ui-icon
             name="butterfly"
-            class="h-6 w-6 text-sky-600 rotate-90 mr-1"
-            :stroke-width="1.5"
+            class="h-8 w-8 text-sky-600 mr-1"
+            :stroke-width="1.2"
           />
         </div>
         <div class="text-stone-700 flex-1">
-          vlinder
+          papillon
         </div>
         <div class="flex-none space-x-2 flex items-center">
           <AppLanguageMenu />

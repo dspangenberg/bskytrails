@@ -18,8 +18,8 @@ dayjs.updateLocale('de', {
     hh: '%d Std',
     d: '1 Tag',
     dd: '%d Tage',
-    M: '1 Monat',
-    MM: '%d Monate',
+    M: '1 Mon.',
+    MM: '%d Mon.',
     y: '1 Jahr',
     yy: '%d Jahre'
   }

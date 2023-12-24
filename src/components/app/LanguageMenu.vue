@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,19 +6,6 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/shadn/ui/dropdown-menu'
-
-export interface Props {
-  title: string | null
-}
-
-const field = ref('indexed')
-const order = ref('desc')
-
-defineProps<Props>()
-
-const toggleOrder = () => {
-  order.value = order.value === 'desc' ? 'asc' : 'desc'
-}
 
 </script>
 
@@ -34,11 +20,11 @@ const toggleOrder = () => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent class="min-w-64">
-          <DropdownMenuRadioGroup v-model="field">
-            <DropdownMenuRadioItem value="indexed">
+          <DropdownMenuRadioGroup>
+            <DropdownMenuRadioItem>
               Deutsch
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="bookmarked">
+            <DropdownMenuRadioItem>
               English
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
