@@ -137,8 +137,8 @@ devDependencies:
     specifier: ^4.5.2
     version: 4.5.2(vite@5.0.10)(vue@3.3.13)
   '@vue-macros/volar':
-    specifier: ^0.18.4
-    version: 0.18.4(@vue-macros/reactivity-transform@0.4.1)(rollup@2.79.1)(typescript@5.3.3)(vue-tsc@1.8.26)(vue@3.3.13)
+    specifier: ^0.18.6
+    version: 0.18.6(@vue-macros/reactivity-transform@0.4.1)(rollup@2.79.1)(typescript@5.3.3)(vue-tsc@1.8.26)(vue@3.3.13)
   '@vue/eslint-config-standard':
     specifier: ^8.0.1
     version: 8.0.1(@typescript-eslint/parser@6.9.0)(eslint-plugin-vue@9.19.2)(eslint@8.56.0)
@@ -2783,8 +2783,8 @@ packages:
       - vue
     dev: true
 
-  /@vue-macros/volar@0.18.4(@vue-macros/reactivity-transform@0.4.1)(rollup@2.79.1)(typescript@5.3.3)(vue-tsc@1.8.26)(vue@3.3.13):
-    resolution: {integrity: sha512-s/luSOBNiUXGvDA4AO70lkUnaoLNY/c04U2NBXbBpTdnGMd8uekYBtzv1xS2Br7JG/T1XdHDNskJG4nKh5VzcQ==}
+  /@vue-macros/volar@0.18.6(@vue-macros/reactivity-transform@0.4.1)(rollup@2.79.1)(typescript@5.3.3)(vue-tsc@1.8.26)(vue@3.3.13):
+    resolution: {integrity: sha512-aEhOL9o8hN053u+YLhKunW9cjkDeQIv5QfXp0s8aCW+yb3H7AohZKxgeSVplrr43Nk6D8h/Eq/AOteSKdAVEjA==}
     engines: {node: '>=16.14.0'}
     peerDependencies:
       vue-tsc: ^1.6.0
@@ -3497,8 +3497,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001570
-      electron-to-chromium: 1.4.615
+      caniuse-lite: 1.0.30001571
+      electron-to-chromium: 1.4.616
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
     dev: true
@@ -3555,8 +3555,8 @@ packages:
     resolution: {integrity: sha512-A2E3U//MBwbJVzebddm1YfNp7Nud5Ip+IPn4BozBmn4KqVX7AvluoIDFWjsv5OkGnKUXQVmMSoMKLa3ScCblcQ==}
     dev: true
 
-  /caniuse-lite@1.0.30001570:
-    resolution: {integrity: sha512-+3e0ASu4sw1SWaoCtvPeyXp+5PsjigkSt8OXZbF9StH5pQWbxEjLAZE3n8Aup5udop1uRiKA7a4utUk/uoSpUw==}
+  /caniuse-lite@1.0.30001571:
+    resolution: {integrity: sha512-tYq/6MoXhdezDLFZuCO/TKboTzuQ/xR5cFdgXPfDtM7/kchBO3b4VWghE/OAi/DV7tTdhmLjZiZBZi1fA/GheQ==}
     dev: true
 
   /chalk@2.4.2:
@@ -3940,8 +3940,8 @@ packages:
     resolution: {integrity: sha512-8KR114CAYQ4/r5EIEsOmOMqQ9j0MRbJZR3aXD/KFA8RuKzyoUB4XrUCg+l8RUGqTVQgKNIgTpjaG8YHRPAbX2w==}
     dev: true
 
-  /electron-to-chromium@1.4.615:
-    resolution: {integrity: sha512-/bKPPcgZVUziECqDc+0HkT87+0zhaWSZHNXqF8FLd2lQcptpmUFwoCSWjCdOng9Gdq+afKArPdEg/0ZW461Eng==}
+  /electron-to-chromium@1.4.616:
+    resolution: {integrity: sha512-1n7zWYh8eS0L9Uy+GskE0lkBUNK83cXTVJI0pU3mGprFsbfSdAc15VTFbo+A+Bq4pwstmL30AVcEU3Fo463lNg==}
     dev: true
 
   /elliptic@6.5.4:
