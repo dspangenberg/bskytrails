@@ -15,10 +15,10 @@ forms:
       password: App-Kennwort
       identifier: E-Mail-Adresse
 navigation:
-  home: Start
+  home: Home
   feeds: Feeds
-  lists: Listen
-  bookmarks: Lesezeichen
-  profile: Profil
-  notifications: Benachrichtigungen
-  preferences: Präferenzen
+  lists: Lists
+  bookmarks: Bookmarks
+  profile: Profile
+  notifications: Notifcations
+  preferences: Preferences

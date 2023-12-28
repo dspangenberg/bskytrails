@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +7,13 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/shadn/ui/dropdown-menu'
-
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 const lang = ref('de')
+
+watch(lang, (value) => {
+  locale.value = value
+})
 
 </script>
 

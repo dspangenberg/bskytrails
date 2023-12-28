@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBskyNotificationListNotifications } from '@atproto/api'
+import { AppBskyFeedPost, AppBskyNotificationListNotifications } from '@atproto/api'
 import { computed } from 'vue'
 import ListViewItem from './ListViewItem.vue'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
@@ -7,6 +7,7 @@ import NotificationContent from './NotificationContent.vue'
 import { useRouter } from 'vue-router'
 
 type Notification = AppBskyNotificationListNotifications.Notification
+type FeedPostRecord = AppBskyFeedPost.Record
 
 const router = useRouter()
 
@@ -29,6 +30,10 @@ const goProfile = (handle: string) => {
     }
   })
 }
+
+const notificationRecord = computed(() => {
+  return props.notification?.record as FeedPostRecord || undefined
+})
 
 const onJson = () => {
   console.log(props.notification)
@@ -106,7 +111,7 @@ const typeIcon = computed<Icon>(() => {
       <NotificationContent
         v-if="notification.reasonSubject"
         :type="notification.reason"
-        :record="notification?.record"
+        :record="notificationRecord"
         :reason-subject="notification.reasonSubject"
       />
     </template>

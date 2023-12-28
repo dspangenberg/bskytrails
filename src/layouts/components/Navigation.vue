@@ -66,17 +66,20 @@ const activeRoute = (name: string, uri: string) => {
           <app-account-button :profile="profile" />
           <storm-ui-nav-group>
             <storm-ui-nav-item
+              i18n
               :badge-count="timelineUpdated"
               badge-color="green"
               :loading="isLoadingFeeds || isLoadingLists"
-              label="Start"
+              label="navigation.home"
               icon="butterfly"
               route-name="home"
+
               active-route-path="/home"
             />
             <storm-ui-nav-item
+              i18n
               :open="settings?.showPinnedViews"
-              label="Feeds"
+              label="navigation.feeds"
               icon="message-2-heart"
               route-name="feeds"
               active-route-path="/feed"
@@ -92,9 +95,10 @@ const activeRoute = (name: string, uri: string) => {
               />
             </storm-ui-nav-item>
             <storm-ui-nav-item
+              i18n
               :open="settings?.showLists"
               :disabled="!profile"
-              label="Listen"
+              label="navigation.lists"
               icon="tabler-list-details"
               route-name="profile"
               :route-params="{ handle: profile?.handle }"
@@ -111,7 +115,8 @@ const activeRoute = (name: string, uri: string) => {
               />
             </storm-ui-nav-item>
             <storm-ui-nav-item
-              label="Lesezeichen"
+              i18n
+              label="navigation.bookmarks"
               icon="tabler-bookmark"
               route-name="bookmarks"
               active-route-path="/bookmarks"
@@ -119,14 +124,16 @@ const activeRoute = (name: string, uri: string) => {
           </storm-ui-nav-group>
           <storm-ui-nav-group>
             <storm-ui-nav-item
+              i18n
               :active="isMyProfile"
-              label="Profil"
+              label="navigation.profile"
               icon="tabler-user-square-rounded"
               route-name="profile"
               :route-params="{ handle: profile?.handle }"
             />
             <storm-ui-nav-item
-              label="Benachrichtigungen"
+              i18n
+              label="navigation.notifications"
               icon="tabler-notification"
               :badge-count="unreadNotificationsCounter"
               badge-animate
@@ -136,7 +143,8 @@ const activeRoute = (name: string, uri: string) => {
             />
 
             <storm-ui-nav-item
-              label="Präferenzen"
+              i18n
+              label="navigation.preferences"
               icon="tabler-adjustments-alt"
               route-name="preferences"
               active-route-path="/preferences"

@@ -8,17 +8,19 @@ const skySessionStore = useSkySessionStore()
 type FeedPostRecord = AppBskyFeedPost.Record
 
 export interface Props {
-  record: FeedPostRecord
+  record?: FeedPostRecord
   type: string
   reasonSubject: string
 }
 
 const { render } = useRichText()
 
-const props = withDefaults(defineProps<Props>(), {})
+const props = withDefaults(defineProps<Props>(), {
+  record: undefined
+})
 
 const renderedText = computed(() => {
-  if (props.type === 'reply') {
+  if (props.type === 'reply' && props.record !== undefined) {
     return render(props.record.text, props.record.facets)
   }
   return null
@@ -29,7 +31,9 @@ const context = ref()
 onMounted(async () => {
   if (props.type === 'like') {
     const posts = await skySessionStore.getPosts([props.reasonSubject])
-    context.value = posts[0]?.post.record.text
+    if (posts && posts.length > 0) {
+      context.value = posts[0]?.post.record.text
+    }
   }
 })
 
