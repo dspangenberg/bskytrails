@@ -1,6 +1,3 @@
-select: Do you want banana?
-fruits:
-  banana: no bananas | {n} banana | {n} bananas
 auth:
   app: SkyTrails – Anmeldung
   signin: im BlueSky-Netzwerk anmelden
@@ -14,6 +11,9 @@ forms:
       service: Service
       password: App-Kennwort
       identifier: E-Mail-Adresse
+misc:
+  messages:
+    offline: Du bist offline.
 navigation:
   home: Start
   feeds: Feeds

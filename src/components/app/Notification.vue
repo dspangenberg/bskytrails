@@ -5,7 +5,6 @@ import ListViewItem from './ListViewItem.vue'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
 import NotificationContent from './NotificationContent.vue'
 import { useRouter } from 'vue-router'
-
 type Notification = AppBskyNotificationListNotifications.Notification
 type FeedPostRecord = AppBskyFeedPost.Record
 

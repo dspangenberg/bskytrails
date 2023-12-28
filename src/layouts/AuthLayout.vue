@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
-
-const { t } = useI18n({
-  useScope: 'global'
-})
-
 </script>
 <template>
   <div class="min-h-full flex flex-1">

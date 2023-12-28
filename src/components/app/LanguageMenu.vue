@@ -9,7 +9,7 @@ import {
 } from '@/components/shadn/ui/dropdown-menu'
 import { useI18n } from 'vue-i18n'
 const { locale } = useI18n()
-const lang = ref('de')
+const lang = ref(locale.value)
 
 watch(lang, (value) => {
   locale.value = value
