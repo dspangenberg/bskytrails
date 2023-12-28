@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
   post: undefined
 })
 
-const recordValue = computed(() => props.record.record as FeedPostRecord)
+const recordValue = computed(() => props.record?.record as FeedPostRecord)
 const postValue = computed<PostView>(() => props.post as PostView)
 const embed = computed(() => postValue.value.embed as AppBskyEmbedImages.View)
 const media = computed(() => embed.value.media as AppBskyEmbedImages.View)
@@ -30,7 +30,10 @@ const recordEmbedRecord = computed(() => recordEmbed.value.record as AppBskyEmbe
 
 <template>
   <div>
-    <app-post-embed-images :images="images" />
+    <app-post-embed-images
+      v-if="recordValue"
+      :images="images"
+    />
     <div class="border rounded-md w-full flex-1 mr-0 pr-0">
       <app-post
         :is-embeded="true"
@@ -38,7 +41,7 @@ const recordEmbedRecord = computed(() => recordEmbed.value.record as AppBskyEmbe
         :indexed-at="recordValue.indexedAt"
         :post="recordValue"
         :uri="recordValue.uri"
-        :record="recordEmbedRecord.record.value"
+        :record="recordEmbedRecord?.record?.value"
         :embed="recordEmbedMedia"
         :embed-type="recordEmbedMedia?.$type"
       />

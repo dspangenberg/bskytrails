@@ -27,7 +27,7 @@ onMounted(async () => {
     <ul
       v-if="notificationView?.notifications?.length"
       ref="el"
-      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto"
+      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto overflow-x-hidden"
     >
       <Notification
         v-for="(notification, index) in notificationView.notifications"

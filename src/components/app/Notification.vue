@@ -3,6 +3,7 @@ import { AppBskyNotificationListNotifications } from '@atproto/api'
 import { computed } from 'vue'
 import ListViewItem from './ListViewItem.vue'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
+import NotificationContent from './NotificationContent.vue'
 import { useRouter } from 'vue-router'
 
 type Notification = AppBskyNotificationListNotifications.Notification
@@ -27,6 +28,10 @@ const goProfile = (handle: string) => {
       handle
     }
   })
+}
+
+const onJson = () => {
+  console.log(props.notification)
 }
 
 const typeIcon = computed<Icon>(() => {
@@ -94,12 +99,27 @@ const typeIcon = computed<Icon>(() => {
     <template #title-right>
       <storm-ui-time-ago
         v-tooltip="notification.indexedAt"
-        class="text-sm"
         :date="notification.indexedAt"
       />
     </template>
     <template #content>
-      xxx
+      <NotificationContent
+        v-if="notification.reasonSubject"
+        :type="notification.reason"
+        :record="notification?.record"
+        :reason-subject="notification.reasonSubject"
+      />
+    </template>
+    <template #footer>
+      <div class="text-right flex-1 items-end flex">
+        <div class="flex-1" />
+        <div>
+          <storm-ui-icon-button
+            icon="code"
+            @click="onJson"
+          />
+        </div>
+      </div>
     </template>
   </ListViewItem>
 </template>
