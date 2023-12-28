@@ -15,7 +15,7 @@ export interface Props {
 const skySessionStore = useSkySessionStore()
 const { isLoadingProfile, actor } = storeToRefs(skySessionStore)
 
-const isMe = computed(() => actor.value.did === skySessionStore.getCurrentDid())
+const isMe = computed(() => actor.value?.did === skySessionStore.getCurrentDid())
 
 const onFollow = async () => {
   if (actor.value?.did) {

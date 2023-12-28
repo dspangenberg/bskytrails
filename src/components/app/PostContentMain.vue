@@ -5,14 +5,17 @@ import { useRichText } from '@/composables/useRichText.ts'
 import { AppBskyRichtextFacet } from '@atproto/api'
 
 export interface Props {
-  type: string
   langs: string[] | undefined
   text: string
   facets: AppBskyRichtextFacet.Main[] | undefined
+  isEmbeded?: boolean
 }
 
 const { render } = useRichText()
-const props = defineProps<Props>()
+
+const props = withDefaults(defineProps<Props>(), {
+  isEmbeded: false
+})
 
 const renderedText = computed(() => {
   return render(props.text, props.facets)
@@ -23,7 +26,8 @@ const renderedText = computed(() => {
 <template>
   <div class="flex items-stretch flex-col">
     <div
-      class="text-lg leading-snug text-black text-left py-2 mr-2  flex-1 flex-wrap break-words hyphens-auto markdown"
+      class="text-lg leading-snug text-black text-left py-2 flex-1 flex-wrap break-words hyphens-auto markdown"
+      :class="isEmbeded ? 'text-base' : 'mr-2 text-lg'"
       v-html="renderedText"
     />
   </div>

@@ -27,7 +27,7 @@ const getThumb = (image: AppBskyEmbedImages.View) => {
 
 <template>
   <div
-    class="my-6 grid gap-2 mx-auto pr-4"
+    class="my-6 grid gap-2 mx-auto border rounded-md"
     :class="gridCols"
   >
     <PostEmbedImagesImage

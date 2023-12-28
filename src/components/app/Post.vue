@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBskyFeedPost, AppBskyActorDefs, AppBskyFeedDefs } from '@atproto/api'
+import { AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import { computed } from 'vue'
 import PostContent from './PostContent.vue'
 import ListViewItem from './ListViewItem.vue'
@@ -20,20 +20,26 @@ type PostView = AppBskyFeedDefs.PostView
 const router = useRouter()
 
 export interface Props {
+  isEmbeded?: boolean
   author: Author | AuthorDetailed
   uri: string
   indexedAt: string
   reason?: Reason
+  embedType: string | undefined
   reply?: Reply
+  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
   post?: PostView
   record: FeedPostRecord
+  type?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  embeded: false,
+  isEmbeded: false,
+  embedType: undefined,
   reason: undefined,
   reply: undefined,
-  post: undefined
+  post: undefined,
+  type: undefined
 })
 
 const isRepost = computed(() => props.reason?.$type === 'app.bsky.feed.defs#reasonRepost')
@@ -61,7 +67,7 @@ const goProfile = (handle: string) => {
 </script>
 
 <template>
-  <ListViewItem :embeded="false">
+  <ListViewItem :embeded="isEmbeded">
     <template #header>
       <PostOtherAccountAction
         v-if="isRepost"
@@ -76,7 +82,7 @@ const goProfile = (handle: string) => {
           class="cursor-pointer mx-auto"
           :src="author.avatar"
           :alt="author.handle"
-          :size="12"
+          :size="isEmbeded ? 10 : 12"
           :icon="avatarIcon"
           @click="goProfile(author.handle)"
         />
@@ -102,26 +108,31 @@ const goProfile = (handle: string) => {
     <template #title-right>
       <storm-ui-time-ago
         v-tooltip="indexedAt"
+        :class="isEmbeded ? 'text-xs' : 'text-sm'"
         :date="indexedAt"
       />
     </template>
     <template #content>
       <PostContent
+        :is-embeded="isEmbeded"
         :record="record"
         :reply="reply"
-        :type="record.$type"
-        :embed="post.embed"
-        :embed-type="post.embed?.$type"
+        :type="type"
+        :post="post"
+        :embed="embed"
+        :embed-type="embedType"
       />
     </template>
     <template #footer>
-      <PostFooter
-        :post="post"
-        :reason="reason"
-        :record="record"
-        :author="author"
-        :reply="reply"
-      />
+      <template v-if="!isEmbeded">
+        <PostFooter
+          :post="post"
+          :reason="reason"
+          :record="record"
+          :author="author"
+          :reply="reply"
+        />
+      </template>
     </template>
   </ListViewItem>
 </template>

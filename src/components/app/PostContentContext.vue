@@ -13,7 +13,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex items-stretch flex-col">
+  <div class="flex items-1 flex-col w-full">
     <div>
       <PostAnswerContext :reply="reply" />
     </div>
