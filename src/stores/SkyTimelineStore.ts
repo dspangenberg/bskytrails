@@ -170,7 +170,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       return {
         view: 'timeline',
         cursor: data.cursor,
-        feed: uniqBy(data.feed, 'post.uri') as FeedPost[]
+        feed: uniqBy(data.feed as unknown[], 'post.uri') as FeedPost[]
       }
     }
     return null
@@ -242,34 +242,38 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     return null
   }
 
-  const postToggleLike = async (post: PostView) => {
-    const isLiked = !!post?.viewer?.like
-    const result = isLiked ? await agent.value.deleteLike(post.viewer?.like) : await agent.value.like(post.uri, post.cid)
+  const postToggleLike = async (post: PostView | undefined) => {
+    if (post !== undefined) {
+      const isLiked = !!post?.viewer?.like
+      const result = isLiked ? await agent.value.deleteLike(post.viewer?.like) : await agent.value.like(post.uri, post.cid)
 
-    let likeCount = post.likeCount || 0
-    if (isLiked) {
-      likeCount--
-    } else {
-      likeCount++
+      let likeCount = post.likeCount || 0
+      if (isLiked) {
+        likeCount--
+      } else {
+        likeCount++
+      }
+
+      updatePostInTimeline(post.uri, 'viewer.like', result ? result.uri : undefined)
+      updatePostInTimeline(post.uri, 'likeCount', likeCount)
     }
-
-    updatePostInTimeline(post.uri, 'viewer.like', result ? result.uri : undefined)
-    updatePostInTimeline(post.uri, 'likeCount', likeCount)
   }
 
-  const postToggleRepost = async (post: PostView) => {
-    const isReposted = !!post.viewer?.repost
-    const result = isReposted ? await agent.value.deleteRepost(post.viewer?.repost) : await agent.value.repost(post.uri, post.cid)
+  const postToggleRepost = async (post: PostView | undefined) => {
+    if (post !== undefined) {
+      const isReposted = !!post.viewer?.repost
+      const result = isReposted ? await agent.value.deleteRepost(post.viewer?.repost) : await agent.value.repost(post.uri, post.cid)
 
-    let repostCount = post.repostCount || 0
-    if (isReposted) {
-      repostCount--
-    } else {
-      repostCount++
+      let repostCount = post.repostCount || 0
+      if (isReposted) {
+        repostCount--
+      } else {
+        repostCount++
+      }
+
+      updatePostInTimeline(post.uri, 'viewer.repost', result ? result.uri : undefined)
+      updatePostInTimeline(post.uri, 'repostCount', repostCount || 0)
     }
-
-    updatePostInTimeline(post.uri, 'viewer.repost', result ? result.uri : undefined)
-    updatePostInTimeline(post.uri, 'repostCount', repostCount || 0)
   }
 
   const getFeedDetails = async (uri: string) => {

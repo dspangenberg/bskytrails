@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,6 +7,8 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/shadn/ui/dropdown-menu'
+
+const lang = ref('de')
 
 </script>
 
@@ -20,11 +23,11 @@ import {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent class="min-w-64">
-          <DropdownMenuRadioGroup>
-            <DropdownMenuRadioItem>
+          <DropdownMenuRadioGroup v-model="lang">
+            <DropdownMenuRadioItem value="de">
               Deutsch
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="en">
               English
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>

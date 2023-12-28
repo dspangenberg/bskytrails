@@ -11,21 +11,20 @@ type FeedPostRecord = AppBskyFeedPost.Record
 type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
-  type: string
   record: FeedPostRecord
   reply?: Reply
   isEmbeded?: boolean
   post?: PostView
   type?: string
   embedType: string | undefined
-  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
 }
 
 const props = withDefaults(defineProps<Props>(), {
   embeded: false,
   post: undefined,
   reply: undefined,
-  type: undefined,
+  type: undefined
 })
 
 const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.defs#postView')
@@ -37,7 +36,7 @@ const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.def
     <div v-if="isReply">
       <PostContentContext :reply="reply" />
     </div>
-    <div>
+    <div v-if="record">
       <PostContentMain
         :langs="record.langs"
         :text="record.text"

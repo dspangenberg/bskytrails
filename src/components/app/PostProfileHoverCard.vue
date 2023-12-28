@@ -22,6 +22,7 @@ export interface Props {
 }
 
 const props = defineProps<Props>()
+
 const onLoadProfile = async () => {
   if (profileCardOpen.value === false) {
     actorDetails.value = await sessionStore.getActorProfile(props.actor.handle, true)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
+import { AppBskyActorDefs, AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import { computed } from 'vue'
 import PostContent from './PostContent.vue'
 import ListViewItem from './ListViewItem.vue'
@@ -27,7 +27,7 @@ export interface Props {
   reason?: Reason
   embedType: string | undefined
   reply?: Reply
-  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
   post?: PostView
   record: FeedPostRecord
   type?: string
@@ -71,7 +71,7 @@ const goProfile = (handle: string) => {
     <template #header>
       <PostOtherAccountAction
         v-if="isRepost"
-        :author="reason.by"
+        :author="reason?.by"
       />
     </template>
     <template #avatar>
@@ -79,6 +79,7 @@ const goProfile = (handle: string) => {
         :actor="author"
       >
         <storm-ui-avatar
+          v-if="author"
           class="cursor-pointer mx-auto"
           :src="author.avatar"
           :alt="author.handle"
@@ -90,6 +91,7 @@ const goProfile = (handle: string) => {
     </template>
     <template #title>
       <div
+        v-if="author"
         class="text-base text-black font-medium leading-normal flex-1 flex truncate"
       >
         {{ author.displayName || author.handle }}
@@ -98,7 +100,7 @@ const goProfile = (handle: string) => {
         class="flex flex-1 items-center leading-1"
       >
         <div
-          v-if="author.displayName "
+          v-if="author?.displayName "
           class="flex-1 text-sm text-gray-500"
         >
           {{ author.handle }}

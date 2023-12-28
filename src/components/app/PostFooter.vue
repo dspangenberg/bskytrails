@@ -15,7 +15,7 @@ type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
-  post: PostView
+  post: PostView | undefined
   record: FeedPostRecord
   author: Author
   reason?: Reason
@@ -23,11 +23,11 @@ export interface Props {
 }
 const props = defineProps<Props>()
 
-const viewer = computed(() => props.post.viewer as FeedViewPost)
+const viewer = computed(() => props.post?.viewer as FeedViewPost)
 const bookmarkedCids = computed(() => bookmarkStore.bookmarkedCids)
 
 const isBookmarked = computed(() => {
-  if (props.post.uri) {
+  if (props.post?.uri) {
     return bookmarkedCids.value.includes(props.post.uri.toString())
   }
   return false
@@ -70,7 +70,7 @@ const onDump = () => {
         icon-active="message-reply"
         color="text-blue-500"
         :active="!!viewer.reply"
-        :counter="post.replyCount"
+        :counter="post?.replyCount"
       />
     </div>
 
@@ -85,7 +85,7 @@ const onDump = () => {
             icon-active="message-share"
             color="text-green-500"
             :active="!!viewer.repost"
-            :counter="post.repostCount"
+            :counter="post?.repostCount"
           />
         </template>
         <div>
@@ -108,7 +108,7 @@ const onDump = () => {
         icon-active="heart-filled"
         color="text-red-500"
         :active="!!viewer.like"
-        :counter="post.likeCount"
+        :counter="post?.likeCount"
         @click="onLikePost"
       />
     </div>

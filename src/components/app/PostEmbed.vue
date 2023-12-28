@@ -12,7 +12,7 @@ type PostView = AppBskyFeedDefs.PostView
 export interface Props {
   post?: PostView
   type: string | undefined
-  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,9 +43,9 @@ const embedComponent = computed(() => {
       :is="embedComponent"
       v-if="type"
       :post="post"
-      :external="embed.external"
-      :images="embed.images"
-      :record="embed.record"
+      :external="embed?.external"
+      :images="embed?.images"
+      :record="embed?.record"
     />
   </div>
 </template>

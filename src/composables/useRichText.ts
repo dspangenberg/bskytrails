@@ -2,7 +2,7 @@ import { RichText, AppBskyRichtextFacet } from '@atproto/api'
 import { marked } from 'marked'
 
 export function useRichText () {
-  const render = (text: string, facets: AppBskyRichtextFacet.Main[]) => {
+  const render = (text: string, facets: AppBskyRichtextFacet.Main[] | undefined) => {
     const rt = new RichText({
       text,
       facets

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
+import { AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import PostEmbed from './PostEmbed.vue'
 type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
   type: string | undefined
   post?: PostView
-  embed: AppBskyEmbedRecord | AppBskyEmbedRecordWithMedia | AppBskyEmbedImages | AppBskyEmbedExternal | undefined
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
 }
 
 withDefaults(defineProps<Props>(), {

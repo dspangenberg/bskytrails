@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AppBskyFeedDefs, AppBskyActorDefs } from '@atproto/api'
+import { AppBskyFeedPost, AppBskyFeedDefs, AppBskyActorDefs } from '@atproto/api'
 import { useRichText } from '@/composables/useRichText.ts'
 import { useElementHover } from '@vueuse/core'
 import { computed, ref } from 'vue'
@@ -8,6 +8,7 @@ import PostOtherAccountAction from './PostOtherAccountAction.vue'
 
 type Reply = AppBskyFeedDefs.ReplyRef
 type Author = AppBskyActorDefs.ProfileViewBasic
+type FeedPostRecord = AppBskyFeedPost.Record
 
 const router = useRouter()
 
@@ -19,8 +20,9 @@ export interface Props {
 
 const props = defineProps<Props>()
 
+const record = computed<FeedPostRecord>(() => props.reply?.parent?.record as FeedPostRecord)
 const renderedText = computed(() => {
-  return render(props.reply?.parent?.record.text, props.reply?.parent?.record.facets)
+  return render(record.value.text, record.value.facets)
 })
 
 const getThread = () => {

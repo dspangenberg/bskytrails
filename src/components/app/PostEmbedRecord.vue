@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { AppBskyEmbedRecord } from '@atproto/api'
-import PostRecord from './PostRecord.vue'
+import { AppBskyFeedDefs, AppBskyEmbedRecord } from '@atproto/api'
+
+type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
   record: AppBskyEmbedRecord.View

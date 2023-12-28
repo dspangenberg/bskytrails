@@ -31,25 +31,29 @@ export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
     return feed
   }
 
-  const addBookmark = async (post: PostView) => {
-    did.value = skySessionStore.getCurrentDid()
-    await db.bookmarks.add({
-      did: did.value,
-      uri: post.uri,
-      indexedAt: post.indexedAt,
-      bookmarkedAt: new Date().toISOString()
-    })
+  const addBookmark = async (post: PostView | undefined) => {
+    if (post !== undefined) {
+      did.value = skySessionStore.getCurrentDid()
+      await db.bookmarks.add({
+        did: did.value,
+        uri: post.uri,
+        indexedAt: post.indexedAt,
+        bookmarkedAt: new Date().toISOString()
+      })
 
-    await getBookmarks()
+      await getBookmarks()
+    }
   }
 
-  const removeBookmark = async (post: PostView) => {
-    const bookmarkedPost = await db.bookmarks
-      .where({ did: did.value, uri: post.uri })
-      .first()
-    if (bookmarkedPost?.id) {
-      await db.bookmarks.delete(bookmarkedPost.id)
-      await getBookmarks()
+  const removeBookmark = async (post: PostView | undefined) => {
+    if (post !== undefined) {
+      const bookmarkedPost = await db.bookmarks
+        .where({ did: did.value, uri: post.uri })
+        .first()
+      if (bookmarkedPost?.id) {
+        await db.bookmarks.delete(bookmarkedPost.id)
+        await getBookmarks()
+      }
     }
   }
 

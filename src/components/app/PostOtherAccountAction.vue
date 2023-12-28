@@ -9,7 +9,7 @@ type AuthorDetailed = AppBskyActorDefs.ProfileViewDetailed
 const router = useRouter()
 
 export interface Props {
-  author: Author | AuthorDetailed
+  author: Author | AuthorDetailed | undefined
   action?: string
 }
 
@@ -30,6 +30,7 @@ const goProfile = (handle: string) => {
 
 <template>
   <div
+    v-if="author !== undefined"
     class="text-stone-400 text-sm flex items-center"
   >
     <div
