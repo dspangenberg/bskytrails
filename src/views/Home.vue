@@ -6,6 +6,7 @@ import { useRoute, type RouteLocationNormalized } from 'vue-router'
 
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
 import { useInfiniteScroll } from '@vueuse/core'
+import Post from '@/components/app/Posts/Post.vue'
 
 const el = ref<HTMLElement | null>(null)
 
@@ -75,7 +76,7 @@ watch(route, async (route) => {
       ref="el"
       class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto overflow-x-hidden "
     >
-      <app-post
+      <Post
         v-for="(post, index) in viewTimeline.feed"
         :key="index"
         :author="post.post?.author"

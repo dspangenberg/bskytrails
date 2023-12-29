@@ -46,6 +46,7 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
       const { did } = JSON.parse(session)
       return did
     }
+    return null
   }
 
   const createAgent = (srv: string): void => {
@@ -149,7 +150,7 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     await getAgent()
     const params: IKeyValueStore = {}
     if (notificationView.value?.cursor) {
-      // params.cursor = notificationView.value?.cursor
+      params.cursor = notificationView.value?.cursor
     }
     const { data, success } = await agent.value.listNotifications(params)
     if (success) {

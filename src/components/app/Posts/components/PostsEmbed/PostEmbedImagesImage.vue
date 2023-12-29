@@ -4,16 +4,19 @@ export type Props = {
   image: string
 }
 
+const emit = defineEmits(['click'])
+
 defineProps<Props>()
 
 </script>
 
 <template>
-  <div>
+  <li>
     <img
       :src="image"
-      class="object-cover border rounded-md shadow-sm"
+      class="object-cover border rounded-md"
       alt=""
+      @click="emit('click')"
     >
-  </div>
+  </li>
 </template>

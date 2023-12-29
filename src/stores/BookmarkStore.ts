@@ -50,7 +50,6 @@ export const useBookmarkStore = defineStore('sky-bookmark-store', () => {
     did.value = skySessionStore.getCurrentDid()
 
     const posts = await getBookmarks()
-    console.log(posts)
     const postUris = posts.map(item => item.uri)
     const feed = await skySessionStore.getPosts(postUris)
     return feed

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { AppBskyActorDefs, AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import { computed } from 'vue'
-import PostContent from './PostContent.vue'
-import ListViewItem from './ListViewItem.vue'
+import PostContent from './components/PostsContent/PostContent.vue'
+import ListViewItem from '@/components/app/ListViewItem.vue'
 import PostProfileHoverCard from './PostProfileHoverCard.vue'
-import PostFooter from './PostFooter.vue'
-import PostOtherAccountAction from './PostOtherAccountAction.vue'
+import PostFooter from './components/PostsContent/PostFooter.vue'
+import PostOtherAccountAction from './components/PostsContent/PostOtherAccountAction.vue'
 
 import { useRouter } from 'vue-router'
 
@@ -21,13 +21,13 @@ const router = useRouter()
 
 export interface Props {
   isEmbeded?: boolean
-  author: Author | AuthorDetailed
+  author: Author | AuthorDetailed | undefined
   uri: string
   indexedAt: string
   reason?: Reason
-  embedType: string | undefined
+  embedType?: string | undefined
   reply?: Reply
-  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
+  embed?: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | AppBskyEmbedImages.View | AppBskyEmbedExternal.View | undefined
   post?: PostView
   record: FeedPostRecord
   type?: string
@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   reason: undefined,
   reply: undefined,
   post: undefined,
+  embed: undefined,
   type: undefined
 })
 

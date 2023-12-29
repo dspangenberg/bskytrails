@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AppBskyActorDefs } from '@atproto/api'
-import PostProfileHoverCard from './PostProfileHoverCard.vue'
+import PostProfileHoverCard from '../../PostProfileHoverCard.vue'
 import { useRouter } from 'vue-router'
 
 type Author = AppBskyActorDefs.ProfileViewBasic

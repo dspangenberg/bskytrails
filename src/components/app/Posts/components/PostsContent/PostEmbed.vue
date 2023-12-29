@@ -3,10 +3,10 @@
 import { AppBskyFeedDefs, AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, AppBskyEmbedImages, AppBskyEmbedExternal } from '@atproto/api'
 import { computed } from 'vue'
 
-import PostEmbedExternal from './PostEmbedExternal.vue'
-import PostEmbedImages from './PostEmbedImages.vue'
-import PostEmbedRecord from './PostEmbedRecord.vue'
-import PostEmbedRecordWithMedia from './PostEmbedRecordWithMedia.vue'
+import PostEmbedExternal from '../PostsEmbed/PostEmbedExternal.vue'
+import PostEmbedImages from '../PostsEmbed/PostEmbedImages.vue'
+import PostEmbedRecord from '../PostsEmbed/PostEmbedRecord.vue'
+import PostEmbedRecordWithMedia from '../PostsEmbed/PostEmbedRecordWithMedia.vue'
 type PostView = AppBskyFeedDefs.PostView
 
 export interface Props {
@@ -37,7 +37,7 @@ const embedComponent = computed(() => {
 
 <template>
   <div
-    class="flex-1 whitespace-break-spaces overflow-x-hidden break-words flex"
+    class="flex-1 whitespace-break-spaces overflow-x-hidden break-words flex mr-6"
   >
     <component
       :is="embedComponent"

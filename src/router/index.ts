@@ -58,12 +58,12 @@ const router = createRouter({
           ]
         },
         {
-          path: 'list',
+          path: 'lists',
           name: 'lists',
           component: () => import('@/views/Home.vue'),
           children: [{
             path: ':uri/:type/:name',
-            name: 'list-feed',
+            name: 'lists-feed',
             component: () => import('@/views/Home.vue')
           }
           ]

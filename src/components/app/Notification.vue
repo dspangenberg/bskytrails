@@ -2,7 +2,7 @@
 import { AppBskyFeedPost, AppBskyNotificationListNotifications } from '@atproto/api'
 import { computed } from 'vue'
 import ListViewItem from './ListViewItem.vue'
-import PostProfileHoverCard from './PostProfileHoverCard.vue'
+import PostProfileHoverCard from './Posts/PostProfileHoverCard.vue'
 import NotificationContent from './NotificationContent.vue'
 import { useRouter } from 'vue-router'
 type Notification = AppBskyNotificationListNotifications.Notification

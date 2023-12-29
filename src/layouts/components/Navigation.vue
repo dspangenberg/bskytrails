@@ -100,16 +100,15 @@ const activeRoute = (name: string, uri: string) => {
               :disabled="!profile"
               label="navigation.lists"
               icon="tabler-list-details"
-              route-name="profile"
-              :route-params="{ handle: profile?.handle }"
-              active-route-path="/list"
+              route-name="lists"
+              active-route-path="/lists"
             >
               <storm-ui-sub-nav-item
                 v-for="list in lists"
                 :key="list.uri"
                 class="animate-in fade-in"
                 :label="list.name"
-                route-name="list-feed"
+                route-name="lists-feed"
                 :route-params="feedParams(list.uri)"
                 :active-route-path="activeRoute('list', list.uri)"
               />
