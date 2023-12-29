@@ -12,7 +12,7 @@ onMounted(async () => {
   await settingsStore.loadSettings()
 })
 
-const onSubmit = async (values: IKeyValueStore) => {
+const onChange = async (values: IKeyValueStore) => {
   await settingsStore.saveSettings(values)
 }
 
@@ -45,7 +45,7 @@ const form = reactive(settings)
       ref="formRef"
       class="space-y-3"
       :initial-values="form"
-      @success="onSubmit"
+      @changed="onChange"
     >
       <div class="p-4">
         <div class="text-lg font-medium mt-4">
@@ -57,7 +57,7 @@ const form = reactive(settings)
           </div>
           <div class="flex-none">
             <storm-ui-switch
-              name="showPinnedViews"
+              name="showPinnedFeeds"
             />
           </div>
         </div>
@@ -85,12 +85,6 @@ const form = reactive(settings)
           </div>
         </div>
       </div>
-      <storm-ui-button
-        type="submit"
-        variant="primary"
-      >
-        Speichern
-      </storm-ui-button>
     </storm-ui-form>
   </div>
 </template>

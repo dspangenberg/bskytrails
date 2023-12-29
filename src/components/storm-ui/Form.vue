@@ -1,29 +1,39 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate'
+import { ref, watch } from 'vue'
 
 export interface Props {
   initialValues: object;
 }
 
+const form = ref<HTMLFormElement | null>(null)
 const props = defineProps<Props>()
-const emit = defineEmits(['success'])
+const emit = defineEmits(['success', 'changed'])
 
-const { setValues, handleSubmit } = useForm({
+const { setValues, handleSubmit, values, meta } = useForm({
   validateOnMount: false,
-  initialValues: props.initialValues,
-  initialErrors: {}
+  initialValues: props.initialValues
+})
+
+watch(values, async (values) => {
+  if (meta.value.dirty) {
+    emit('changed', values)
+  }
 })
 
 const onSubmit = handleSubmit(values => {
   emit('success', values)
 })
 
-defineExpose({ setValues })
+defineExpose({ setValues, form })
 
 </script>
 
 <template>
-  <form @submit="onSubmit">
+  <form
+    ref="form"
+    @submit="onSubmit"
+  >
     <slot />
   </form>
 </template>

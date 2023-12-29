@@ -78,7 +78,7 @@ const activeRoute = (name: string, uri: string) => {
             />
             <storm-ui-nav-item
               i18n
-              :open="settings?.showPinnedViews"
+              :open="settings?.showPinnedFeeds"
               label="navigation.feeds"
               icon="message-2-heart"
               route-name="feeds"

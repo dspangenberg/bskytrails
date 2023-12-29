@@ -57,7 +57,7 @@ const typeIcon = computed<Icon>(() => {
       } as Icon
   }
   return {
-    icon: 'message-circle-2-dots',
+    icon: 'dots',
     color: 'text-gray-500'
   } as Icon
 })

@@ -6,6 +6,7 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import path from 'path'
 import svgLoader from 'vite-svg-loader'
 import removeConsole from 'vite-plugin-remove-console'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,6 +34,22 @@ export default defineConfig({
           }
         ]
       }
+    }),
+    nodePolyfills({
+      // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
+      include: ['path', 'net', 'stream', 'util'],
+      // To exclude specific polyfills, add them to this list. Note: if include is provided, this has no effect
+      exclude: [
+        'http' // Excludes the polyfill for `http` and `node:http`.
+      ],
+      // Whether to polyfill specific globals.
+      globals: {
+        Buffer: true, // can also be 'build', 'dev', or false
+        global: true,
+        process: true
+      },
+      // Override the default polyfills for specific modules.
+      protocolImports: true
     }),
     removeConsole(),
     VueI18nPlugin({

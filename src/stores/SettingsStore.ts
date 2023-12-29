@@ -1,11 +1,29 @@
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
-import { db, type LocalSettings } from '@/db/index'
 import { useSkySessionStore } from './SkySessionStore.ts'
+import PouchDB from 'pouchdb'
+import PouchDBUpsert from 'pouchdb-upsert'
+import PouchDBFind from 'pouchdb-find'
 
 export type IKeyValueStore = {
   [key: string]: string | boolean | number
 }
+
+type Setting = {
+  did: string,
+  key: string
+  value: string | boolean | number
+}
+
+type FindResponse<T> = {
+  docs: T[]
+  warning?: string
+}
+
+PouchDB.plugin(PouchDBUpsert)
+PouchDB.plugin(PouchDBFind)
+
+const db = new PouchDB<Setting>('settings')
 
 export const useSettingsStore = defineStore('sky-settings-store', () => {
   const skySessionStore = useSkySessionStore()
@@ -15,7 +33,7 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
   did.value = skySessionStore.getCurrentDid()
 
   const defaultSettings: IKeyValueStore = {
-    showPinnedViews: true,
+    showPinnedFeeds: true,
     showLists: true,
     answersWithContext: true
   }
@@ -23,12 +41,15 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
   const settings = ref<IKeyValueStore | null>(null)
 
   const readSetting = async (key: string, useDefaultValue: boolean = true) => {
-    const record: LocalSettings | undefined = await db.localSettings
-      .where({ did: did.value, key })
-      .first()
+    const { docs }: FindResponse<Setting> = await db.find({
+      selector: {
+        did: { $eq: did.value },
+        key: { $eq: key }
+      }
+    })
 
-    if (record !== undefined && record?.value) {
-      return record.value
+    if (docs[0]) {
+      return docs[0].value
     } else {
       return (useDefaultValue) ? defaultSettings[key] : null
     }
@@ -38,6 +59,14 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
     const lSettings: IKeyValueStore | null = {}
     for (const [key, value] of Object.entries(settings)) {
       lSettings[key] = value
+      const _id = `${did.value}-${key}`
+      await db.upsert(_id, () => {
+        return {
+          did: did.value,
+          key,
+          value
+        }
+      })
     }
 
     store.$patch((state) => {
@@ -49,7 +78,7 @@ export const useSettingsStore = defineStore('sky-settings-store', () => {
     const lSettings: IKeyValueStore = {}
     for (const [key] of Object.entries(defaultSettings)) {
       const value = await readSetting(key)
-      if (value !== null) {
+      if (value !== undefined && value !== null) {
         lSettings[key] = value
       }
     }
