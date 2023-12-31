@@ -4,7 +4,9 @@ import PostContentMain from './PostContentMain.vue'
 import PostContentContext from './PostContentContext.vue'
 import PostContentMedia from './PostContentMedia.vue'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 type Reply = AppBskyFeedDefs.ReplyRef
 
 type FeedPostRecord = AppBskyFeedPost.Record
@@ -27,6 +29,27 @@ const props = withDefaults(defineProps<Props>(), {
   type: undefined
 })
 
+const feedParams = (uri: string) => {
+  const parts = uri.replace('at://', '').split('/')
+  const params = {
+    uri: parts[0],
+    type: parts[1],
+    name: parts[2]
+  }
+  return params
+}
+
+const getThread = () => {
+  const uri = props.post?.uri || null
+  if (uri) {
+    const params = feedParams(uri)
+    router.push({
+      name: 'thread',
+      params
+    })
+  }
+}
+
 const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.defs#postView')
 
 </script>
@@ -38,6 +61,7 @@ const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.def
     </div>
     <div v-if="record">
       <PostContentMain
+        @click="getThread"
         :langs="record.langs"
         :text="record.text"
         :facets="record.facets"

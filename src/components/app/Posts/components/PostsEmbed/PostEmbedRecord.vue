@@ -14,7 +14,7 @@ export interface Props {
 
 const props = defineProps<Props>()
 
-const author = computed(() => props.record.value.author as Author | AuthorDetailed)
+const author = computed(() => props.record?.value?.author as Author | AuthorDetailed)
 
 </script>
 

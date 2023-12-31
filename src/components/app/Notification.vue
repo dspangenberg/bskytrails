@@ -50,6 +50,11 @@ const typeIcon = computed<Icon>(() => {
         icon: 'butterfly',
         color: 'text-sky-500'
       } as Icon
+    case 'repost':
+      return {
+        icon: 'replace-filled',
+        color: 'text-green-500'
+      } as Icon
     case 'reply':
       return {
         icon: 'message-circle-2-filled',
@@ -111,6 +116,7 @@ const typeIcon = computed<Icon>(() => {
         v-if="notification.reasonSubject"
         :type="notification.reason"
         :record="notificationRecord"
+        :uri="notification.uri"
         :reason-subject="notification.reasonSubject"
       />
     </template>

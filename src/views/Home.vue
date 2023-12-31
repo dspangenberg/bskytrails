@@ -52,14 +52,12 @@ watch(route, async (route) => {
       }
       break
     case 'thread':
-      if (route.params?.uri.toString()) {
-        await timelineStore.getTimelineByView('thread', route.params.uri.toString())
-      }
+      await timelineStore.getTimelineByView('thread', createFeedUri(route))
       break
     case 'feeds-timeline':
       await timelineStore.getTimelineByView('feed', createFeedUri(route))
       break
-    case 'list-feed':
+    case 'lists-feed':
       await timelineStore.getTimelineByView('list', createFeedUri(route))
       break
     default:

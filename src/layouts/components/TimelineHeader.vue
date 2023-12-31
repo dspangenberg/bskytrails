@@ -2,6 +2,7 @@
 import TimelineHeaderDefault from './TimelineHeaderDefault.vue'
 import TimelineHeaderBookmarks from './TimelineHeaderBookmarks.vue'
 import TimelineHeaderProfile from './TimelineHeaderProfile.vue'
+import TimelineHeaderListTimeline from './TimelineHeaderListTimeline.vue'
 import TimelineHeaderFeedTimeline from './TimelineHeaderFeedTimeline.vue'
 import { type RouteRecordName } from 'vue-router'
 import { computed } from 'vue'
@@ -19,6 +20,8 @@ const component = computed(() => {
       return TimelineHeaderBookmarks
     case 'profile':
       return TimelineHeaderProfile
+    case 'lists-feed':
+      return TimelineHeaderListTimeline
     case 'feeds-timeline':
       return TimelineHeaderFeedTimeline
     default:

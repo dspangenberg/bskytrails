@@ -30,6 +30,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const isLoading = ref(false)
 
   const feed = ref()
+  const list = ref()
   const lastCursor = ref<string | null>(null)
   const limit = ref<number>(10)
   const feedType = ref<string | undefined>(undefined)
@@ -40,6 +41,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   type FeedParams = {
     key?: string
     limit?: number
+    thread?: string
     value?: string
     uri?: string
     list?: string
@@ -191,6 +193,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const getListFeed = async (params: FeedParams) => {
     if (params.list) {
       params.list = new AtUri(params.list).href
+      await getListDetails(params.list)
     }
     const { data, success } = await agent.value.app.bsky.feed.getListFeed(params)
     if (success) {
@@ -229,6 +232,9 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   const getThreadTimeline = async (params: FeedParams) => {
+    if (params.uri) {
+      params.uri = new AtUri(params.uri).href
+    }
     delete params.limit
     const { data, success } = await agent.value.getPostThread(params)
     if (success) {
@@ -286,6 +292,10 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
+  const getListDetails = async (uri: string) => {
+    list.value = skySessionStore?.lists?.find(item => item.uri === uri)
+  }
+
   const updatePostInTimeline = (uri: string, key: string, value: string | number | undefined) => {
     const index = viewTimeline.value?.feed?.findIndex(item => item.post.uri === uri)
     if (index !== undefined && index !== -1) {
@@ -305,10 +315,12 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   return {
     feed,
     isLoading,
+    list,
     loadMore,
     viewTimeline,
     pollTimeline,
     getFeedDetails,
+    getListDetails,
     getTimelineByView,
     postToggleLike,
     postToggleRepost,

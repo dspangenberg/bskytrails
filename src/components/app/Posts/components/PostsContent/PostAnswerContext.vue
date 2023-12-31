@@ -20,6 +20,15 @@ export interface Props {
 
 const props = defineProps<Props>()
 
+const feedParams = (uri: string) => {
+  const parts = uri.replace('at://', '').split('/')
+  const params = {
+    uri: parts[0],
+    type: parts[1],
+    name: parts[2]
+  }
+  return params
+}
 const record = computed<FeedPostRecord>(() => props.reply?.parent?.record as FeedPostRecord)
 const renderedText = computed(() => {
   return render(record.value.text, record.value.facets)
@@ -27,12 +36,11 @@ const renderedText = computed(() => {
 
 const getThread = () => {
   const uri = props.reply?.parent?.uri || null
-  if (typeof uri === 'string') {
+  if (uri) {
+    const params = feedParams(uri)
     router.push({
       name: 'thread',
-      params: {
-        uri: encodeURI(uri)
-      }
+      params
     })
   }
 }
@@ -44,7 +52,7 @@ const isExpanded = useElementHover(myHoverableElement, { delayEnter: 1000 })
 </script>
 <template>
   <div
-    class="text-sm leading-snug text-gray-500 text-left my-2 mr-2 break-words flex-1 flex-wrap hyphens-auto border-l-4 pl-2 animate-in slide-in-from-top animate-out slide-out-from-bottom"
+    class="text-sm cursor-pointer leading-snug text-gray-500 text-left my-2 mr-2 break-words flex-1 flex-wrap hyphens-auto border-l-4 pl-2 animate-in slide-in-from-top animate-out slide-out-from-bottom"
     @click="getThread()"
   >
     <PostOtherAccountAction

@@ -69,7 +69,7 @@ const router = createRouter({
           ]
         },
         {
-          path: 'thread/:uri',
+          path: 'thread/:uri/:type/:name',
           name: 'thread',
           component: () => import('@/views/Home.vue')
         },

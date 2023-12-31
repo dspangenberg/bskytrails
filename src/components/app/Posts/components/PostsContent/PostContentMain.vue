@@ -24,7 +24,7 @@ const renderedText = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-stretch flex-col">
+  <div class="flex items-stretch flex-col cursor-pointer">
     <div
       class="text-lg leading-snug text-black text-left py-2 flex-1 flex-wrap break-words hyphens-auto markdown"
       :class="isEmbeded ? 'text-base' : 'mr-2 text-lg'"

@@ -16,22 +16,25 @@ const uri = computed<string>(() => {
   return urll.host.replace('www.', '')
 })
 
+const open = () => {
+  window.open(url.value, '_blank')
+}
+
 </script>
 
 <template>
-  <div class="mx-auto max-w-md overflow-hidden border rounded-md bg-white shadow-sm pb-2 my-6">
+  <div
+    class="mx-auto max-w-md overflow-hidden border rounded-md bg-white shadow-sm pb-2 my-6 cursor-pointer flex-1"
+    @click="open"
+  >
     <img
       :src="thumb"
       class="w-full object-cover"
       alt=""
     >
-    <div class="p-4">
-      <p class="mb-1 text-sm text-primary-500 text-blue-800">
-        <a
-          :href="url"
-          target="_blank"
-          class="hover:underline"
-        > {{ uri }}</a>
+    <div class="px-4 space-y-2">
+      <p class="my-2 text-sm text-primary-500 text-blue-800">
+        {{ uri }}
       </p>
       <h3
         v-tooltip="external.title"
@@ -40,7 +43,7 @@ const uri = computed<string>(() => {
         {{ external.title }}
       </h3>
       <p
-        class="mt-1 text-gray-500 hyphens-auto leading-snug text-base"
+        class="text-gray-500 hyphens-auto leading-snug text-base"
         v-html="external.description"
       />
     </div>

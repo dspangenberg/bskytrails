@@ -146,11 +146,11 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     }
   }
 
-  const getNotifications = async () => {
+  const getNotifications = async (cursor: string | undefined) => {
     await getAgent()
     const params: IKeyValueStore = {}
-    if (notificationView.value?.cursor) {
-      params.cursor = notificationView.value?.cursor
+    if (cursor) {
+      params.cursor = cursor
     }
     const { data, success } = await agent.value.listNotifications(params)
     if (success) {

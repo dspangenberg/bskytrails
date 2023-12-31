@@ -40,7 +40,7 @@ const title = computed(() => {
       return 'Thread'
     case 'feeds-timeline':
       return 'Feed'
-    case 'list-feed':
+    case 'lists-feed':
       return 'Liste'
     case 'preferences':
       return 'Präferenzen'

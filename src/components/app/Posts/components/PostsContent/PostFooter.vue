@@ -81,8 +81,8 @@ const onDump = () => {
       >
         <template #trigger>
           <storm-ui-action-with-counter
-            icon-default="message-share"
-            icon-active="message-share"
+            icon-default="replace"
+            icon-active="replace-filled"
             color="text-green-500"
             :active="!!viewer.repost"
             :counter="post?.repostCount"
