@@ -110,7 +110,7 @@ const activeRoute = (name: string, uri: string) => {
                 :label="list.name"
                 route-name="lists-feed"
                 :route-params="feedParams(list.uri)"
-                :active-route-path="activeRoute('list', list.uri)"
+                :active-route-path="activeRoute('lists', list.uri)"
               />
             </storm-ui-nav-item>
             <storm-ui-nav-item

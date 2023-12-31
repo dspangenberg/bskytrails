@@ -92,21 +92,10 @@ onMounted(async () => {
           :title="title"
           :type="route?.name || null"
         />
-        <Suspense>
-          <div class="flex-1 scroll-smooth  scrollbar-thin overflow-y-auto overflow-x-hidden">
-            <router-view />
-          </div>
 
-          <template #fallback>
-            <div
-              class="flex items-center justify-center  flex-1"
-            >
-              <storm-ui-spinner
-                :size="12"
-              />
-            </div>
-          </template>
-        </Suspense>
+        <div class="flex-1 scroll-smooth  scrollbar-thin overflow-y-auto overflow-x-hidden">
+          <router-view />
+        </div>
       </main>
       <Navigation :profile="profile" />
       <aside class="sm:w-32  overflow-y-auto w-64 flex-none" />

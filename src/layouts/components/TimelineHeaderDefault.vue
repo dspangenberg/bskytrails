@@ -10,7 +10,7 @@ defineProps<Props>()
 <template>
   <div class="flex items-center flex-1 p-4">
     <h1 class="text-xl font-bold flex-1">
-      {{ title }}
+      {{ title || '&nbsp;' }}
     </h1>
   </div>
 </template>

@@ -4,7 +4,7 @@ import TimelineHeaderBookmarks from './TimelineHeaderBookmarks.vue'
 import TimelineHeaderProfile from './TimelineHeaderProfile.vue'
 import TimelineHeaderListTimeline from './TimelineHeaderListTimeline.vue'
 import TimelineHeaderFeedTimeline from './TimelineHeaderFeedTimeline.vue'
-import { type RouteRecordName } from 'vue-router'
+import { useRouter, type RouteRecordName } from 'vue-router'
 import { computed } from 'vue'
 
 export interface Props {
@@ -12,7 +12,12 @@ export interface Props {
   type: RouteRecordName | null
 }
 
+const router = useRouter()
 const props = defineProps<Props>()
+
+const onGoBack = () => {
+  router.go(-1)
+}
 
 const component = computed(() => {
   switch (props.type) {
@@ -32,23 +37,21 @@ const component = computed(() => {
 </script>
 
 <template>
-  <Suspense>
+  <div
+    class="border-b bg-white flex items-center min-h-[65px] animate-in fade-in duration-150"
+  >
     <div
-      class="border-b bg-white flex items-center"
+      v-if="props.type !== 'profile'"
+      class="flex-none pl-4 cursor-pointer"
     >
-      <component
-        :is="component"
-        :title="title"
+      <storm-ui-icon
+        name="arrow-left"
+        @click="onGoBack"
       />
     </div>
-    <template #fallback>
-      <div
-        class="flex items-center justify-center  flex-1"
-      >
-        <storm-ui-spinner
-          :size="12"
-        />
-      </div>
-    </template>
-  </Suspense>
+    <component
+      :is="component"
+      :title="title"
+    />
+  </div>
 </template>

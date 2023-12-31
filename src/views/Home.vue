@@ -5,7 +5,7 @@ import { useSkySessionStore } from '@/stores/SkySessionStore.ts'
 import { useRoute, type RouteLocationNormalized } from 'vue-router'
 
 import { useSkyTimelineStore } from '@/stores/SkyTimelineStore.ts'
-import { useInfiniteScroll } from '@vueuse/core'
+import { useInfiniteScroll, useScroll } from '@vueuse/core'
 import Post from '@/components/app/Posts/Post.vue'
 
 const el = ref<HTMLElement | null>(null)
@@ -27,6 +27,8 @@ useInfiniteScroll(
   }
 )
 
+const { y } = useScroll(el)
+
 const createFeedUri = (route: RouteLocationNormalized) => {
   const { uri, type, name } = route.params
   const params = `${uri}/${type}/${name}`
@@ -42,6 +44,7 @@ const actorParam = computed<string>(() => {
 })
 
 watch(route, async (route) => {
+  y.value = 0
   switch (route.name) {
     case 'bookmarks':
       await timelineStore.getTimelineByView('bookmarks')
@@ -72,7 +75,7 @@ watch(route, async (route) => {
     <ul
       v-if="!isLoading && viewTimeline"
       ref="el"
-      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto overflow-x-hidden "
+      class="divide-y px-0 mx-0 h-full flex flex-col flex-1 overflow-y-auto overflow-x-hidden animate-in fade-in duration-150"
     >
       <Post
         v-for="(post, index) in viewTimeline.feed"
@@ -88,5 +91,17 @@ watch(route, async (route) => {
         :record="post.post?.record"
       />
     </ul>
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-screen w-full flex-1"
+    >
+      <!-- centered content -->
+
+      <div class="">
+        <storm-ui-spinner :size="8" />
+      </div>
+
+      <!-- end centered content -->
+    </div>
   </div>
 </template>

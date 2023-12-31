@@ -162,6 +162,12 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     }
   }
 
+  const updateSeenNotifications = async () => {
+    await getAgent()
+    await agent.value.updateSeenNotifications()
+    unreadNotificationsCounter.value = 0
+  }
+
   const getUnreadNotificationsCount = async () => {
     const { data, success } = await agent.value.countUnreadNotifications()
     if (success) {
@@ -183,7 +189,7 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
       await getActorLists(agent.value.session?.did)
       await getPreferences()
       await getUnreadNotificationsCount()
-      await getNotifications()
+      await getNotifications(undefined)
 
       isLoadingProfile.value = false
     }
@@ -210,6 +216,7 @@ export const useSkySessionStore = defineStore('sky-session-store', () => {
     parentPost,
     getNotifications,
     getUnreadNotificationsCount,
+    updateSeenNotifications,
     notificationView,
     unreadNotificationsCounter,
     follow,

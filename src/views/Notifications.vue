@@ -19,6 +19,7 @@ useInfiniteScroll(
 
 onMounted(async () => {
   await skySessionStore.getNotifications()
+  await skySessionStore.updateSeenNotifications()
 })
 
 </script>

@@ -32,13 +32,13 @@ watch(route, async (route) => {
 </script>
 
 <template>
-  <div>
+  <div class="animate-in fade-in">
     <div v-if="!isLoadingProfile">
       <div
         v-if="actor"
         class="flex flex-1 relative z-100 flex-col"
       >
-        <div class="text-xl font-bold flex-1 mb-4">
+        <div class="text-xl font-bold flex-1 mb-4 animate-in fade-in">
           <img
             :src="actor.banner"
             class="h-[150px] w-[600px] object-cover cursor-pointer"

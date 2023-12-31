@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AppBskyEmbedRecordWithMedia, AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedImages } from '@atproto/api'
 import { computed } from 'vue'
-import { type ViewImage } from '@atproto/api/dist/client/types/app/bsky/embed/images.js'
+import { type ViewImage } from '@atproto/api/dist/client/types/app/bsky/embed/images.d.ts'
 import Post from '@/components/app/Posts/Post.vue'
 
 type PostView = AppBskyFeedDefs.PostView

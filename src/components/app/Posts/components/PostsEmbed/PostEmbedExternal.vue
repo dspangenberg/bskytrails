@@ -24,10 +24,12 @@ const open = () => {
 
 <template>
   <div
+    v-if="external"
     class="mx-auto max-w-md overflow-hidden border rounded-md bg-white shadow-sm pb-2 my-6 cursor-pointer flex-1"
     @click="open"
   >
     <img
+      v-if="thumb"
       :src="thumb"
       class="w-full object-cover"
       alt=""

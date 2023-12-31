@@ -5,6 +5,7 @@ import { useSkySessionStore } from './SkySessionStore.ts'
 
 import { set, unset, uniqBy } from 'lodash'
 import { useBookmarkStore } from '@/stores/BookmarkStore.ts'
+import sortOn from 'sort-on'
 
 type FeedPost = AppBskyFeedDefs.FeedViewPost
 type PostView = AppBskyFeedDefs.PostView
@@ -15,6 +16,10 @@ export type ViewTimline = {
   view: string,
   cursor?: string | null,
   feed: FeedPost[] | null
+}
+
+export type CachedPosts = {
+  [key: string]: FeedPost[]
 }
 
 export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
@@ -35,6 +40,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const limit = ref<number>(10)
   const feedType = ref<string | undefined>(undefined)
   const oldParam = ref<string | null>(null)
+  const cachedPosts = ref<CachedPosts>({})
   const newestPost = ref<string | null>(null)
   const timelineUpdated = ref<boolean>(false)
 
@@ -80,11 +86,13 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
-  const getTimelineByView = async (type: string, value?: string, cursor?: string) => {
+  const getTimelineByView = async (type: string, value?: string, cursor?: string, loadMore: boolean = false) => {
     feedType.value = type
 
-    if (cursor === undefined) {
-      isLoading.value = true
+    if (!loadMore) {
+      store.$patch((state) => {
+        state.isLoading = true
+      })
     }
 
     if (value !== undefined && value !== null) {
@@ -107,127 +115,176 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       params.cursor = cursor
     }
 
-    let data: ViewTimline | null = null
+    const data: ViewTimline | null = null
 
     switch (type) {
       case 'timeline':
-        data = await getTimeline(params)
+        await getTimeline(params, loadMore)
         break
       case 'feed':
-        data = await getTimelineFeed(params)
+        await getTimelineFeed(params)
         break
       case 'actor':
-        data = await getActorTimeline(params)
+        await getActorTimeline(params, loadMore)
         break
       case 'list':
-        data = await getListFeed(params)
+        await getListFeed(params, loadMore)
         break
       case 'thread':
-        data = await getThreadTimeline(params)
+        await getThreadTimeline(params)
         break
       case 'bookmarks':
-        data = await getBookmarksFeed()
+        await getBookmarksFeed()
     }
+
+    store.$patch((state) => {
+      state.viewTimeline = viewTimeline.value
+    })
 
     if (cursor) {
       lastCursor.value = cursor
       return data
     }
-
-    if (data) {
-      store.$patch((state) => {
-        state.viewTimeline = data
-      })
-    }
-
-    isLoading.value = false
   }
 
   const loadMore = async (cursor: string) => {
     if (lastCursor.value !== cursor) {
       const type = feedType.value
       if (type) {
-        const loadedData = await getTimelineByView(type, oldParam.value || undefined, cursor)
-        if (Array.isArray(loadedData?.feed)) {
-          store.$patch((state) => {
-            if (state.viewTimeline) {
-              state.viewTimeline.cursor = loadedData?.cursor || null
-            }
-            if (Array.isArray(loadedData?.feed)) {
-              for (const item of loadedData.feed) {
-                state.viewTimeline?.feed?.push(item)
-              }
-            }
-          })
-        }
+        await getTimelineByView(type, oldParam.value || undefined, cursor, true)
+        setCachedPosts()
       }
     }
   }
 
-  const getTimeline = async (params: FeedParams) => {
+  const setCachedPosts = () => {
+    if (viewTimeline.value && viewTimeline.value.feed) {
+      cachedPosts.value[viewTimeline.value.view] = viewTimeline.value.feed.slice(1, 10)
+    }
+  }
+
+  const getCachedPosts = (view: string) => {
+    if (cachedPosts.value[view]?.length) {
+      store.$patch((state) => {
+        state.isLoading = false
+      })
+      return cachedPosts.value[view]
+    }
+    return null
+  }
+
+  const mergeFeed = (feeds: FeedPost[]) => {
+    let merged: FeedPost[]
+    if (viewTimeline.value?.feed?.length) {
+      merged = viewTimeline.value.feed.concat(feeds)
+    } else {
+      merged = feeds
+    }
+    merged = uniqBy(merged, 'post.uri').map(item => {
+      item.sortOn = item.reason ? item.reason.indexedAt : item.post.indexedAt
+      return item
+    })
+    return sortOn(merged, '-sortOn')
+  }
+
+  const updateViewTimeline = (view: string, cursor: string | null = null, feed: FeedPost[] | null = null) => {
+    viewTimeline.value = {
+      view,
+      cursor,
+      feed
+    }
+    if (feed) setCachedPosts()
+  }
+
+  const setViewTimeline = (view: string, cursor: string | null, loadMore: boolean = false) => {
+    let existingPosts: FeedPost[] | null = null
+
+    if (viewTimeline.value?.view === view) {
+      existingPosts = viewTimeline.value?.feed
+    } else {
+      existingPosts = getCachedPosts(view) || []
+    }
+
+    if (existingPosts) {
+      updateViewTimeline(view, cursor, existingPosts)
+    } else {
+      updateViewTimeline(view)
+    }
+  }
+
+  const getTimeline = async (params: FeedParams, loadMore: boolean = false) => {
+    const viewName = 'timeline'
+
+    setViewTimeline(viewName, params.cursor || null, loadMore)
+
     newestPost.value = null
     timelineUpdated.value = false
     const { data, success } = await agent.value.getTimeline(params)
     if (success) {
-      return {
-        view: 'timeline',
-        cursor: data.cursor,
-        feed: uniqBy(data.feed as unknown[], 'post.uri') as FeedPost[]
-      }
+      updateViewTimeline(viewName, data.cursor, mergeFeed(data.feed))
+      store.$patch((state) => {
+        state.isLoading = false
+      })
     }
-    return null
   }
 
-  const getActorTimeline = async (params: FeedParams) => {
+  const getActorTimeline = async (params: FeedParams, loadMore: boolean = false) => {
+    const viewName = `actor-${params.actor}`
+    setViewTimeline(viewName, params.cursor || null, loadMore)
+
     const { data, success } = await agent.value.getAuthorFeed(params)
     if (success) {
-      return {
-        view: `actor-${params.actor}`,
-        cursor: data.cursor,
-        feed: data.feed
-      }
+      updateViewTimeline(viewName, data.cursor, mergeFeed(data.feed))
+      store.$patch((state) => {
+        state.isLoading = false
+      })
     }
-    return null
   }
 
-  const getListFeed = async (params: FeedParams) => {
+  const getListFeed = async (params: FeedParams, loadMore: boolean = false) => {
     if (params.list) {
       params.list = new AtUri(params.list).href
       await getListDetails(params.list)
     }
+    const viewName = `list-${params.list}`
+    setViewTimeline(viewName, params.cursor || null, loadMore)
+
     const { data, success } = await agent.value.app.bsky.feed.getListFeed(params)
     if (success) {
-      return {
-        view: `actor-${params.actor}`,
-        cursor: data.cursor,
-        feed: data.feed
-      }
+      updateViewTimeline(viewName, data.cursor, mergeFeed(data.feed))
+      store.$patch((state) => {
+        state.isLoading = false
+      })
     }
-    return null
   }
 
-  const getTimelineFeed = async (params: FeedParams) => {
+  const getTimelineFeed = async (params: FeedParams, loadMore: boolean = false) => {
     if (params.feed) {
       params.feed = new AtUri(params.feed).href
     }
+    const viewName = `feed-${params.feed}`
+    setViewTimeline(viewName, params.cursor || null, loadMore)
+
     const { data, success } = await agent.value.app.bsky.feed.getFeed(params)
     if (success) {
-      return {
-        view: `feed-${params.feed}`,
-        cursor: data.cursor,
-        feed: data.feed
-      }
+      updateViewTimeline(viewName, data.cursor, mergeFeed(data.feed))
+      store.$patch((state) => {
+        state.isLoading = false
+      })
     }
-    return null
   }
 
   const getBookmarksFeed = async () => {
     const posts = await bookmarkStore.getBookmarkedPosts() as FeedPost[]
+    isLoading.value = false
     const data: ViewTimline = {
       view: 'feed-bookmarks',
       cursor: '',
       feed: posts
     }
+    store.$patch((state) => {
+      state.viewTimeline = data
+    })
     return data
   }
 
@@ -237,13 +294,16 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
     delete params.limit
     const { data, success } = await agent.value.getPostThread(params)
+    isLoading.value = false
     if (success) {
       data.thread.replies.unshift({ post: data.thread.post })
-      return {
-        view: 'thread',
-        cursor: undefined,
-        feed: data.thread.replies
-      }
+      store.$patch((state) => {
+        state.viewTimeline = {
+          view: 'thread',
+          cursor: undefined,
+          feed: data.thread.replies
+        }
+      })
     }
     return null
   }
@@ -313,9 +373,11 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   }
 
   return {
+    cachedPosts,
     feed,
     isLoading,
     list,
+    feedType,
     loadMore,
     viewTimeline,
     pollTimeline,
