@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<Props>(), {
   embeded: false
 })
 
-const firstColumnClass = computed(() => props.embeded ? 'w-10' : 'w-16')
+const firstColumnClass = computed(() => props.embeded ? 'w-12' : 'w-16')
 
 </script>
 

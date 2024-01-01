@@ -131,10 +131,10 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
         await getTimelineFeed(params)
         break
       case 'actor':
-        await getActorTimeline(params, loadMore)
+        await getActorTimeline(params)
         break
       case 'list':
-        await getListFeed(params, loadMore)
+        await getListFeed(params)
         break
       case 'thread':
         await getThreadTimeline(params)
@@ -220,6 +220,12 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
 
   const getTimeline = async (params: FeedParams, loadMore: boolean = false) => {
     const viewName = 'timeline'
+    if (!loadMore) {
+      store.$patch((state) => {
+        state.timelineUpdated = false
+        state.newTimelinePosts = []
+      })
+    }
 
     setViewTimeline(viewName, params.cursor || null)
 
@@ -250,7 +256,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
-  const getActorTimeline = async (params: FeedParams, loadMore: boolean = false) => {
+  const getActorTimeline = async (params: FeedParams) => {
     const viewName = `actor-${params.actor}`
     setViewTimeline(viewName, params.cursor || null)
 
@@ -263,7 +269,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
-  const getListFeed = async (params: FeedParams, loadMore: boolean = false) => {
+  const getListFeed = async (params: FeedParams) => {
     if (params.list) {
       params.list = new AtUri(params.list).href
       await getListDetails(params.list)
@@ -280,7 +286,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
-  const getTimelineFeed = async (params: FeedParams, loadMore: boolean = false) => {
+  const getTimelineFeed = async (params: FeedParams) => {
     if (params.feed) {
       params.feed = new AtUri(params.feed).href
     }

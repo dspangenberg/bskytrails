@@ -33,6 +33,7 @@ const recordEmbedRecord = computed(() => recordEmbed.value ? recordEmbed.value?.
 
 <template>
   <div>
+    ***
     <PostEmbedImages
       v-if="recordValue"
       class="mb-4"

@@ -61,10 +61,10 @@ const isReply = computed(() => props.reply?.parent?.$type === 'app.bsky.feed.def
     </div>
     <div v-if="record">
       <PostContentMain
-        @click="getThread"
         :langs="record.langs"
         :text="record.text"
         :facets="record.facets"
+        @click="getThread"
       />
     </div>
     <div>

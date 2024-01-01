@@ -67,6 +67,7 @@ watch(route, async (route) => {
           >
             <storm-ui-button
               v-if="actor.viewer?.following"
+              variant="danger-default"
               icon="user-x"
               @click="onFollow"
             >

@@ -50,7 +50,7 @@ const classes = computed(() => {
     dark: 'flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
     default: 'font-medium  px-2 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700',
     danger: 'font-medium  px-2 py-2 bg-red-600 hover:bg-red-700 text-white active:bg-red-800 focus:ring-red-500',
-    'danger-ghost': 'font-medium  px-1.5 py-1 border  border-red-600 hover:border-red-800 hover:text-red-800 active:text-white text-red-600 active:bg-red-800 focus:ring-red-500',
+    'danger-default': 'font-medium  px-2 py-2 bg-white border border-gray-300 text-gray-700 hover:border-red-300 hover:text-red-600 active:text-white active:bg-red-800 focus:ring-red-500',
     link: 'py-2 bg-transparent hover:text-blue-700 text-blue-500'
   }[props.variant]
 })
