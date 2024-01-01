@@ -88,3 +88,11 @@
 .markdown a {
   @apply text-sky-500 hover:underline;
 }
+
+.gallery div {
+  @apply space-x-3 mx-auto flex;
+}
+
+.silentbox-item img {
+  @apply rounded-md border max-h-[350px] object-cover;
+}

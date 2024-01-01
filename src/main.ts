@@ -5,7 +5,9 @@ import '@fontsource/clear-sans/400.css'
 import '@fontsource/clear-sans/500.css'
 import '@fontsource/clear-sans/700.css'
 import 'floating-vue/dist/style.css'
+import 'vue-silentbox/dist/style.css'
 
+import VueSilentbox from 'vue-silentbox'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
@@ -47,4 +49,5 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.use(FloatingVue)
+app.use(VueSilentbox)
 app.mount('#app')

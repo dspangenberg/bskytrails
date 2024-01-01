@@ -113,6 +113,9 @@ dependencies:
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.4.3)
+  vue-silentbox:
+    specifier: ^3.0.4
+    version: 3.0.4
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -7574,6 +7577,10 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.3(typescript@5.3.3)
+    dev: false
+
+  /vue-silentbox@3.0.4:
+    resolution: {integrity: sha512-4Xkczng9G15dupbAoHJRX5ht4z22pWCsJ3ETe/WnKcAiEU9kdyfdM3OUko5TaxcrD0t5SM+4Ym1zkzBMhLwOuA==}
     dev: false
 
   /vue-template-compiler@2.7.16:

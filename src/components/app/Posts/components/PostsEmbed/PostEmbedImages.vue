@@ -9,6 +9,11 @@ export type Props = {
 
 const props = defineProps<Props>()
 
+type Image = {
+  src: string
+  description: string
+}
+
 const gridCols = computed(() => {
   return {
     1: 'grid-cols-1',
@@ -19,6 +24,8 @@ const gridCols = computed(() => {
   }[props.images.length]
 })
 
+const silentbox = ref<HTMLFormElement | null>(null)
+
 const getThumb = (image: AppBskyEmbedImages.View) => {
   return image.thumb as string
 }
@@ -26,28 +33,27 @@ const getThumb = (image: AppBskyEmbedImages.View) => {
 const lightboxIndex = ref(0)
 const lightboxVisibile = ref(false)
 
-const lightboxImages = computed(() => props.images?.map(item => item.fullsize) as unknown[])
+const lightboxImages = computed<Image>(() => props.images?.map(item => {
+  return {
+    src: item.fullsize as string,
+    description: item.alt as string,
+    thumbnail: item.thumb as string,
+    thumbnailWidth: 'auto'
+  }
+}))
 
-const showLigtbox = (index: number) => {
-  lightboxIndex.value = index
-  lightboxVisibile.value = true
+const showLigtbox = (item, index) => {
+  console.log(silentbox.value)
+  silentbox.value.open(item)
 }
 
 </script>
 
 <template>
-  <div>
-    <ul
-      v-if="images"
-      class="grid gap-2 mx-auto"
-      :class="gridCols"
-    >
-      <PostEmbedImagesImage
-        v-for="(image, index) in images"
-        :key="index"
-        :image="getThumb(image)"
-        @click="showLigtbox(index)"
-      />
-    </ul>
+  <div class="gallery flex flex-1 my-3">
+    <silent-box
+      ref="silentbox"
+      :gallery="lightboxImages"
+    />
   </div>
 </template>

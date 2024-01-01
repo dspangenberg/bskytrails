@@ -14,7 +14,7 @@ defineProps<Props>()
   <li>
     <img
       :src="image"
-      class="object-cover border rounded-md"
+      class="object-cover border rounded-md max-h-[200px] mx-auto"
       alt=""
       @click="emit('click')"
     >
