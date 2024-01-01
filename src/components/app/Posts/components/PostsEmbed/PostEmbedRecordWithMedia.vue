@@ -2,6 +2,8 @@
 import { AppBskyEmbedRecordWithMedia, AppBskyFeedPost, AppBskyFeedDefs, AppBskyEmbedImages } from '@atproto/api'
 import { computed } from 'vue'
 import { type ViewImage } from '@atproto/api/dist/client/types/app/bsky/embed/images.d.ts'
+import PostEmbedImages from './PostEmbedImages.vue'
+
 import Post from '@/components/app/Posts/Post.vue'
 
 type PostView = AppBskyFeedDefs.PostView
@@ -31,7 +33,7 @@ const recordEmbedRecord = computed(() => recordEmbed.value ? recordEmbed.value?.
 
 <template>
   <div>
-    <app-post-embed-images
+    <PostEmbedImages
       v-if="recordValue"
       class="mb-4"
       :images="images"

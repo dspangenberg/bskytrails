@@ -43,6 +43,8 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const cachedPosts = ref<CachedPosts>({})
   const newestPost = ref<string | null>(null)
   const timelineUpdated = ref<boolean>(false)
+  const newTimelinePosts = ref<FeedPost[]>([])
+  const timelineRefreshed = ref<string>('')
 
   type FeedParams = {
     key?: string
@@ -77,6 +79,10 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     if (success && data.feed[0]?.post) {
       const newPost: string = data.feed[0].post.uri
       if (newestPost.value !== null && newPost !== newestPost.value) {
+        if (!newTimelinePosts.value.find(item => item.post?.uri === newPost)) {
+          newTimelinePosts.value.push(data.feed[0])
+        }
+
         store.$patch((state) => {
           state.timelineUpdated = true
         })
@@ -196,7 +202,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     if (feed) setCachedPosts()
   }
 
-  const setViewTimeline = (view: string, cursor: string | null, loadMore: boolean = false) => {
+  const setViewTimeline = (view: string, cursor: string | null) => {
     let existingPosts: FeedPost[] | null = null
 
     if (viewTimeline.value?.view === view) {
@@ -215,7 +221,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
   const getTimeline = async (params: FeedParams, loadMore: boolean = false) => {
     const viewName = 'timeline'
 
-    setViewTimeline(viewName, params.cursor || null, loadMore)
+    setViewTimeline(viewName, params.cursor || null)
 
     newestPost.value = null
     timelineUpdated.value = false
@@ -228,9 +234,25 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     }
   }
 
+  const refreshTimeline = () => {
+    if (viewTimeline.value?.view === 'timeline' && newTimelinePosts.value.length) {
+      const feed = mergeFeed(newTimelinePosts.value)
+      store.$patch((state) => {
+        if (state.viewTimeline?.feed) {
+          state.viewTimeline.feed = feed
+          state.newTimelinePosts = []
+          state.timelineUpdated = false
+          state.timelineRefreshed = new Date().toISOString()
+          state.newestPost = null
+        }
+        setCachedPosts()
+      })
+    }
+  }
+
   const getActorTimeline = async (params: FeedParams, loadMore: boolean = false) => {
     const viewName = `actor-${params.actor}`
-    setViewTimeline(viewName, params.cursor || null, loadMore)
+    setViewTimeline(viewName, params.cursor || null)
 
     const { data, success } = await agent.value.getAuthorFeed(params)
     if (success) {
@@ -247,7 +269,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       await getListDetails(params.list)
     }
     const viewName = `list-${params.list}`
-    setViewTimeline(viewName, params.cursor || null, loadMore)
+    setViewTimeline(viewName, params.cursor || null)
 
     const { data, success } = await agent.value.app.bsky.feed.getListFeed(params)
     if (success) {
@@ -263,7 +285,7 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
       params.feed = new AtUri(params.feed).href
     }
     const viewName = `feed-${params.feed}`
-    setViewTimeline(viewName, params.cursor || null, loadMore)
+    setViewTimeline(viewName, params.cursor || null)
 
     const { data, success } = await agent.value.app.bsky.feed.getFeed(params)
     if (success) {
@@ -377,9 +399,13 @@ export const useSkyTimelineStore = defineStore('sky-timeline-store', () => {
     feed,
     isLoading,
     list,
+    timelineRefreshed,
     feedType,
     loadMore,
+    newTimelinePosts,
+    newestPost,
     viewTimeline,
+    refreshTimeline,
     pollTimeline,
     getFeedDetails,
     getListDetails,

@@ -16,7 +16,7 @@ const route = useRoute()
 const skySessionStore = useSkySessionStore()
 
 const { profile } = storeToRefs(skySessionStore)
-const { viewTimeline, isLoading } = storeToRefs(timelineStore)
+const { viewTimeline, isLoading, timelineRefreshed } = storeToRefs(timelineStore)
 
 useInfiniteScroll(
   el,
@@ -35,12 +35,17 @@ const createFeedUri = (route: RouteLocationNormalized) => {
 
   return params
 }
-
 const actorParam = computed<string>(() => {
   if (route.params?.handle) {
     return route.params.handle.toString()
   }
   return profile.value?.handle.toString() || ''
+})
+
+watch(timelineRefreshed, (update: string) => {
+  if (update) {
+    y.value = 0
+  }
 })
 
 watch(route, async (route) => {
@@ -71,7 +76,7 @@ watch(route, async (route) => {
 
 </script>
 <template>
-  <div class="flex flex-1 h-full items-stretch">
+  <div class="flex flex-1 h-full items-stretch flex-col">
     <ul
       v-if="!isLoading && viewTimeline"
       ref="el"
