@@ -21,8 +21,8 @@ dependencies:
     specifier: ^1.6.0
     version: 1.6.0(rollup@2.79.1)(vue-i18n@9.8.0)
   '@tabler/icons':
-    specifier: ^2.44.0
-    version: 2.44.0
+    specifier: ^2.45.0
+    version: 2.45.0
   '@vee-validate/i18n':
     specifier: ^4.12.4
     version: 4.12.4
@@ -2188,8 +2188,8 @@ packages:
       string.prototype.matchall: 4.0.10
     dev: true
 
-  /@tabler/icons@2.44.0:
-    resolution: {integrity: sha512-WPPtihDcAwEm1QZM9MXQw6+r/R2/qx7KMU1eegsi9DsqBLAb0W2kbt6e/syvd6j9c+6XNpRVBW1ziGqSWQAWOg==}
+  /@tabler/icons@2.45.0:
+    resolution: {integrity: sha512-J10UDghOni9wlrj5CpKAzychDCABCKYq897mGg0wGFsd+tYLaUdz0dt/HZeGnV8gZJo0hIiTPLGwBp5EW42Qsg==}
     dev: false
 
   /@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.0):
