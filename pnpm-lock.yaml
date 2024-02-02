@@ -21,8 +21,8 @@ dependencies:
     specifier: ^1.6.0
     version: 1.6.0(rollup@2.79.1)(vue-i18n@9.8.0)
   '@tabler/icons':
-    specifier: ^2.44.0
-    version: 2.44.0
+    specifier: ^2.47.0
+    version: 2.47.0
   '@vee-validate/i18n':
     specifier: ^4.12.4
     version: 4.12.4
@@ -2188,8 +2188,8 @@ packages:
       string.prototype.matchall: 4.0.10
     dev: true
 
-  /@tabler/icons@2.44.0:
-    resolution: {integrity: sha512-WPPtihDcAwEm1QZM9MXQw6+r/R2/qx7KMU1eegsi9DsqBLAb0W2kbt6e/syvd6j9c+6XNpRVBW1ziGqSWQAWOg==}
+  /@tabler/icons@2.47.0:
+    resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
   /@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.0):
@@ -3277,7 +3277,7 @@ packages:
     dependencies:
       howler: 2.2.4
       vue: 3.4.3(typescript@5.3.3)
-      vue-demi: 0.14.6(vue@3.4.3)
+      vue-demi: 0.14.7(vue@3.4.3)
     dev: false
 
   /abort-controller@3.0.0:
@@ -7522,6 +7522,21 @@ packages:
         optional: true
     dependencies:
       vue: 3.4.3(typescript@5.3.3)
+
+  /vue-demi@0.14.7(vue@3.4.3):
+    resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.4.3(typescript@5.3.3)
+    dev: false
 
   /vue-easy-lightbox@1.17.0(vue@3.4.3):
     resolution: {integrity: sha512-dPkfNzcXQmiG7neNjJ9pDoWXWncOriVn9I/R7E8reEuRJ2GGScEcGB/fEtoqFnbcFzWYYPlcPGLc7q556nhHGQ==}

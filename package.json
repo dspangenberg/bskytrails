@@ -16,7 +16,7 @@
     "@fontsource/clear-sans": "^5.0.7",
     "@headlessui/vue": "^1.7.16",
     "@intlify/unplugin-vue-i18n": "^1.6.0",
-    "@tabler/icons": "^2.44.0",
+    "@tabler/icons": "^2.47.0",
     "@vee-validate/i18n": "^4.12.4",
     "@vee-validate/rules": "^4.12.4",
     "@vee-validate/zod": "^4.12.4",
