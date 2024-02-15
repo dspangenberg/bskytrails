@@ -38,7 +38,7 @@
     "pouchdb": "^8.0.1",
     "pouchdb-find": "^8.0.1",
     "pouchdb-upsert": "^2.2.0",
-    "radix-vue": "^1.2.5",
+    "radix-vue": "^1.4.4",
     "random-html-id": "^2.2.0",
     "sort-on": "^6.0.0",
     "tailwind-merge": "^2.2.0",
